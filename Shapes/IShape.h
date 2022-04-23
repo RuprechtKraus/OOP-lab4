@@ -11,10 +11,13 @@ public:
 
 	virtual double GetArea() const = 0;
 	virtual double GetPerimeter() const = 0;
-	std::string ToString() const;
+	virtual std::string ToString() const;
 	std::optional<uint32_t> GetOutlineColor() const;
 
-private:
+protected:
 	ShapeType m_shape{};
 	std::optional<uint32_t> m_outlineColor{};
+
+private:
+	virtual void AppendProperties(std::ostream& os) const = 0;
 };

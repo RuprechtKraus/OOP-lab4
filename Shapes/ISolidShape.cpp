@@ -1,4 +1,5 @@
 #include "ISolidShape.h"
+#include <iomanip>
 
 ISolidShape::ISolidShape(ShapeType type, uint32_t fillColor, std::optional<uint32_t> outlineColor)
 	: IShape(type, outlineColor)

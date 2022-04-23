@@ -10,6 +10,6 @@ public:
 
 	uint32_t GetFillColor() const;
 
-private:
+protected:
 	uint32_t m_fillColor{};
 };

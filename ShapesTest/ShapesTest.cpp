@@ -5,10 +5,10 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-double RoundToNDecimalPlaces(double value, int decimalPlaces)
+double RoundNumber(double value, int decimalPlaces)
 {
 	const double multiplier = std::pow(10.0, decimalPlaces);
-	return std::floor(value * multiplier) / multiplier;
+	return std::round(value * multiplier) / multiplier;
 }
 
 namespace ShapesTest
@@ -20,7 +20,7 @@ namespace ShapesTest
 		TEST_METHOD(HasLength)
 		{
 			LineSegment line({ 0.0, 0.0 }, { 5.0, 5.0 });
-			Assert::AreEqual(7.07, RoundToNDecimalPlaces(line.GetLength(), 2), 
+			Assert::AreEqual(7.1, RoundNumber(line.GetLength(), 1), 
 				L"Length is incorrect");
 		}
 
@@ -51,23 +51,17 @@ namespace ShapesTest
 			Assert::AreEqual(0xFFFF00U, line.GetColor(), L"Color isn't yellow");
 		}
 
-		TEST_METHOD(HasRedOutline)
+		TEST_METHOD(CanBeConvertedToString)
 		{
-			LineSegment line({ 0.0, 0.0 }, { 5.0, 5.0 }, 0x000000U, 0xFF0000U);
-			Assert::IsTrue(line.GetOutlineColor().has_value(), L"No outline");
-			Assert::AreEqual(0xFF0000U, line.GetOutlineColor().value(), L"Outline color is not red");
-		}
+			LineSegment line({ 0.0, 0.0 }, { 5.5, 5.5 }, 0xFF0000U);
+			std::string expectedString{ R"(Type: LineSegment
+Outline: none
+Color: 0XFF0000
+Start: 0, 0
+End: 5.5, 5.5
+)" };
 
-		TEST_METHOD(HasNoOutline)
-		{
-			LineSegment line({ 0.0, 0.0 }, { 5.0, 5.0 });
-			Assert::IsFalse(line.GetOutlineColor().has_value(), L"Has outline");
-		}
-
-		TEST_METHOD(HasLineSegmentType)
-		{
-			LineSegment line({ 0.0, 0.0 }, { 5.0, 5.0 });
-			Assert::AreEqual(std::string{ "LineSegment" }, line.ToString(), L"Incorrect shape type");
+			Assert::AreEqual(expectedString, line.ToString(), L"Convertation to string failed");
 		}
 	};
 
@@ -94,7 +88,7 @@ namespace ShapesTest
 		TEST_METHOD(HasPerimeter)
 		{
 			Triangle triangle({ 0.0, 0.0 }, { 2.0, 4.0 }, { 4.0, 0.0 });
-			Assert::AreEqual(12.94, RoundToNDecimalPlaces(triangle.GetPerimeter(), 2), L"Perimeter is incorrect");
+			Assert::AreEqual(12.94, RoundNumber(triangle.GetPerimeter(), 2), L"Perimeter is incorrect");
 		}
 
 		TEST_METHOD(HasWhiteFillColorByDefault)

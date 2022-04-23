@@ -15,6 +15,7 @@ public:
 
 private:
 	void CalculateEdges();
+	void AppendProperties(std::ostream& os) const override;
 
 	Point m_vertex1{};
 	Point m_vertex2{};

@@ -1,7 +1,10 @@
 #include "LineSegment.h"
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 
-LineSegment::LineSegment(Point start, Point end, uint32_t color, std::optional<uint32_t> outlineColor)
-	: IShape(ShapeType::LineSegment, outlineColor)
+LineSegment::LineSegment(Point start, Point end, uint32_t color)
+	: IShape(ShapeType::LineSegment, std::nullopt)
 	, m_start(start)
 	, m_end(end)
 	, m_color(color)
@@ -36,4 +39,12 @@ Point LineSegment::GetStartPoint() const
 Point LineSegment::GetEndPoint() const
 {
 	return m_end;
+}
+
+void LineSegment::AppendProperties(std::ostream& os) const
+{
+	os << "\nColor: " << m_color
+	   << "\nStart: " << m_start.x << ", " << m_start.y
+	   << "\nEnd: " << m_end.x << ", " << m_end.y
+	   << std::endl;
 }

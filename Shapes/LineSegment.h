@@ -5,7 +5,7 @@
 class LineSegment final : public IShape
 {
 public:
-	LineSegment(Point start, Point end, uint32_t color = 0x000000U, std::optional<uint32_t> outlineColor = std::nullopt);
+	LineSegment(Point start, Point end, uint32_t color = 0x000000U);
 
 	double GetArea() const override;
 	double GetPerimeter() const override;
@@ -15,6 +15,8 @@ public:
 	Point GetEndPoint() const;
 
 private:
+	void AppendProperties(std::ostream& os) const override;
+
 	Point m_start{};
 	Point m_end{};
 	uint32_t m_color{};
