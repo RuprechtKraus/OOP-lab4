@@ -6,6 +6,10 @@ IShape::IShape(ShapeType type, std::optional<uint32_t> outlineColor)
 {
 }
 
+IShape::~IShape()
+{
+}
+
 std::string IShape::ToString() const
 {
 	return ShapeToString(m_shape);

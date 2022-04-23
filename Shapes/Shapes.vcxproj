@@ -141,16 +141,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="IShape.cpp" />
+    <ClCompile Include="ISolidShape.cpp" />
     <ClCompile Include="LineSegment.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="ShapeType.cpp" />
+    <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IShape.h" />
+    <ClInclude Include="ISolidShape.h" />
     <ClInclude Include="LineSegment.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="ShapeType.h" />
+    <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

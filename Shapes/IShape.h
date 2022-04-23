@@ -6,7 +6,8 @@
 class IShape
 {
 public:
-	IShape(ShapeType type, std::optional<uint32_t> outlineColor = std::nullopt);
+	IShape(ShapeType type, std::optional<uint32_t> outlineColor);
+	virtual ~IShape();
 
 	virtual double GetArea() const = 0;
 	virtual double GetPerimeter() const = 0;
