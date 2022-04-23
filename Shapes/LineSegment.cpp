@@ -41,10 +41,17 @@ Point LineSegment::GetEndPoint() const
 	return m_end;
 }
 
-void LineSegment::AppendProperties(std::ostream& os) const
+std::string LineSegment::ToString() const
 {
-	os << "\nColor: " << m_color
+	std::ostringstream ss;
+	PrepareStream(ss);
+	ss << IShape::ToString()
+	   << "\nColor: " << m_color
 	   << "\nStart: " << m_start.x << ", " << m_start.y
 	   << "\nEnd: " << m_end.x << ", " << m_end.y
+	   << "\nLength: " << GetLength()
 	   << std::endl;
+	ResetStream(ss);
+
+	return ss.str();
 }

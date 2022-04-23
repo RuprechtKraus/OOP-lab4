@@ -13,10 +13,9 @@ public:
 	uint32_t GetColor() const;
 	Point GetStartPoint() const;
 	Point GetEndPoint() const;
+	std::string ToString() const override;
 
 private:
-	void AppendProperties(std::ostream& os) const override;
-
 	Point m_start{};
 	Point m_end{};
 	uint32_t m_color{};

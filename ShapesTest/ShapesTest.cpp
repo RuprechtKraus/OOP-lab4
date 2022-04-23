@@ -55,10 +55,10 @@ namespace ShapesTest
 		{
 			LineSegment line({ 0.0, 0.0 }, { 5.5, 5.5 }, 0xFF0000U);
 			std::string expectedString{ R"(Type: LineSegment
-Outline: none
 Color: 0XFF0000
-Start: 0, 0
+Start: 0.0, 0.0
 End: 5.5, 5.5
+Length: 7.8
 )" };
 
 			Assert::AreEqual(expectedString, line.ToString(), L"Convertation to string failed");
@@ -114,6 +114,23 @@ End: 5.5, 5.5
 			Triangle triangle({ 0.0, 0.0 }, { 2.0, 4.0 }, { 4.0, 0.0 }, 0x00FF00U, 0x0000FFU);
 			Assert::IsTrue(triangle.GetOutlineColor().has_value(), L"No outline");
 			Assert::AreEqual(0x0000FFU, triangle.GetOutlineColor().value(), L"Outline color is not blue");
+		}
+
+		TEST_METHOD(CanBeConvertedToString)
+		{
+			Triangle triangle({ 0.0, 0.0 }, { 2.0, 4.0 }, { 4.0, 0.0 }, 0x00FF00U, 0x0000FFU);
+			std::string expectedString{ R"(Type: Triangle
+Area: 8.0
+Perimeter: 12.9
+Fill color: 0X00FF00
+Outline color: 0XFF
+Vertex 1: 0.0, 0.0
+Vertex 2: 2.0, 4.0
+Vertex 3: 4.0, 0.0
+Edge A length: 4.5
+Edge B length: 4.0
+Edge C length: 4.5
+)" };
 		}
 	};
 }

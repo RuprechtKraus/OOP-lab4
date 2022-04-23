@@ -12,10 +12,10 @@ public:
 	Point GetVertex1() const;
 	Point GetVertex2() const;
 	Point GetVertex3() const;
+	std::string ToString() const override;
 
 private:
 	void CalculateEdges();
-	void AppendProperties(std::ostream& os) const override;
 
 	Point m_vertex1{};
 	Point m_vertex2{};

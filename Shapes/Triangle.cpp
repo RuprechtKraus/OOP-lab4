@@ -1,6 +1,7 @@
 #include "Triangle.h"
 #include <cmath>
 #include <iostream>
+#include <sstream>
 
 Triangle::Triangle(Point v1, Point v2, Point v3, uint32_t fillColor, std::optional<uint32_t> outlineColor)
 	: ISolidShape(ShapeType::Triangle, fillColor, outlineColor)
@@ -44,10 +45,19 @@ Point Triangle::GetVertex3() const
 	return m_vertex3;
 }
 
-void Triangle::AppendProperties(std::ostream& os) const
+std::string Triangle::ToString() const
 {
-	os << "\nVertex 1: " << m_vertex1.x << ", " << m_vertex1.y
+	std::ostringstream ss;
+	PrepareStream(ss);
+	ss << ISolidShape::ToString()
+	   << "\nVertex 1: " << m_vertex1.x << ", " << m_vertex1.y
 	   << "\nVertex 2: " << m_vertex2.x << ", " << m_vertex2.y
 	   << "\nVertex 3: " << m_vertex3.x << ", " << m_vertex3.y
+	   << "\nEdge A length: " << m_edgeA
+	   << "\nEdge B length: " << m_edgeB
+	   << "\nEdge C length: " << m_edgeC
 	   << std::endl;
+	ResetStream(ss);
+
+	return ss.str();
 }

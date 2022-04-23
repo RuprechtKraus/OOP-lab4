@@ -9,6 +9,7 @@ public:
 	virtual ~ISolidShape();
 
 	uint32_t GetFillColor() const;
+	std::string ToString() const override;
 
 protected:
 	uint32_t m_fillColor{};

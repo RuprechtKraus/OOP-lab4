@@ -11,25 +11,26 @@ IShape::~IShape()
 {
 }
 
-std::string IShape::ToString() const
-{
-	std::ostringstream ss;
-	ss.precision(1);
-	ss << std::fixed << std::hex << std::uppercase << std::showbase;
-	ss << "Type: " << ShapeToString(m_shape)
-	   << "\nArea: " << GetArea()
-	   << "\nPerimeter: " << GetPerimeter();
-	if (m_outlineColor.has_value())
-	{
-		ss << "\nOutline: " << m_outlineColor.value();
-	}
-	AppendProperties(ss);
-	ss << std::dec << std::nouppercase << std::noshowbase;
-	ss.precision(6);
-	return ss.str();
-}
-
 std::optional<uint32_t> IShape::GetOutlineColor() const
 {
 	return m_outlineColor;
+}
+
+std::string IShape::ToString() const
+{
+	std::ostringstream ss;
+	ss << "Type: " << ShapeToString(m_shape);
+	return ss.str();
+}
+
+void IShape::PrepareStream(std::ostream& os)
+{
+	os.precision(1);
+	os << std::fixed << std::hex << std::uppercase << std::showbase;
+}
+
+void IShape::ResetStream(std::ostream& os)
+{
+	os.precision(6);
+	os << std::defaultfloat << std::dec << std::nouppercase << std::noshowbase;
 }

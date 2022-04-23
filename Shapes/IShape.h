@@ -15,9 +15,9 @@ public:
 	std::optional<uint32_t> GetOutlineColor() const;
 
 protected:
+	static void PrepareStream(std::ostream& os);
+	static void ResetStream(std::ostream& os);
+
 	ShapeType m_shape{};
 	std::optional<uint32_t> m_outlineColor{};
-
-private:
-	virtual void AppendProperties(std::ostream& os) const = 0;
 };
