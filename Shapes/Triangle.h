@@ -14,7 +14,12 @@ public:
 	Point GetVertex3() const;
 
 private:
+	void CalculateEdges();
+
 	Point m_vertex1{};
 	Point m_vertex2{};
 	Point m_vertex3{};
+	double m_edgeA{};
+	double m_edgeB{};
+	double m_edgeC{};
 };

@@ -23,7 +23,7 @@ double LineSegment::GetPerimeter() const
 	return 0.0;
 }
 
-uint16_t LineSegment::GetColor() const
+uint32_t LineSegment::GetColor() const
 {
 	return m_color;
 }
