@@ -1,4 +1,5 @@
 #include "Rectangle.h"
+#include <sstream>
 
 Rectangle::Rectangle(const Point& topLeft, const Point& bottomRight,
 	uint32_t fillColor, std::optional<uint32_t> outlineColor)
@@ -6,31 +7,38 @@ Rectangle::Rectangle(const Point& topLeft, const Point& bottomRight,
 {
 	if (bottomRight.x < topLeft.x || bottomRight.y > topLeft.y)
 	{
-		throw std::runtime_error("Incorrect bottom right vertex positioning");
+		throw std::invalid_argument("Incorrect bottom right vertex positioning");
 	}
 
 	m_topLeft = topLeft;
 	m_bottomRight = bottomRight;
+	UpdateDimensions();
+}
+
+void Rectangle::UpdateDimensions()
+{
+	m_width = m_bottomRight.x - m_topLeft.x;
+	m_height = m_topLeft.y - m_bottomRight.y;
 }
 
 double Rectangle::GetArea() const
 {
-	return 0.0;
+	return m_width * m_height;
 }
 
 double Rectangle::GetPerimeter() const
 {
-	return 0.0;
+	return (m_width + m_height) * 2;
 }
 
 double Rectangle::GetWidth() const
 {
-	return 0.0;
+	return m_width;
 }
 
 double Rectangle::GetHeight() const
 {
-	return 0.0;
+	return m_height;
 }
 
 Point Rectangle::GetTopLeft() const
@@ -45,5 +53,16 @@ Point Rectangle::GetBottomRight() const
 
 std::string Rectangle::ToString() const
 {
-	return "";
+	std::ostringstream ss;
+
+	PrepareStream(ss);
+	ss << ISolidShape::ToString()
+	   << "\nTop left: " << m_topLeft.x << ", " << m_topLeft.y
+	   << "\nBottom right: " << m_bottomRight.x << ", " << m_bottomRight.y
+	   << "\nWidth: " << m_width
+	   << "\nHeight: " << m_height
+	   << std::endl;
+	ResetStream(ss);
+
+	return ss.str();
 }

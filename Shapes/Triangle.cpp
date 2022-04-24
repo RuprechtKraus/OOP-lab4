@@ -10,10 +10,10 @@ Triangle::Triangle(const Point& v1, const Point& v2, const Point& v3,
 	, m_vertex2(v2)
 	, m_vertex3(v3)
 {
-	CalculateEdges();
+	UpdateEdges();
 }
 
-void Triangle::CalculateEdges()
+void Triangle::UpdateEdges()
 {
 	m_edgeA = Distance(m_vertex1, m_vertex2);
 	m_edgeB = Distance(m_vertex1, m_vertex3);
@@ -29,6 +29,21 @@ double Triangle::GetArea() const
 double Triangle::GetPerimeter() const
 {
 	return m_edgeA + m_edgeB + m_edgeC;
+}
+
+double Triangle::GetEdgeA() const
+{
+	return m_edgeA;
+}
+
+double Triangle::GetEdgeB() const
+{
+	return m_edgeB;
+}
+
+double Triangle::GetEdgeC() const
+{
+	return m_edgeC;
 }
 
 Point Triangle::GetVertex1() const

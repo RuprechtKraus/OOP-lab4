@@ -5,7 +5,7 @@
 class Rectangle final : public ISolidShape
 {
 public:
-	Rectangle(const Point& topLeft, const Point& bottomRight, 
+	Rectangle(const Point& topLeft, const Point& bottomRight,
 		uint32_t fillColor = 0xFFFFFFU, std::optional<uint32_t> outlineColor = std::nullopt);
 
 	double GetArea() const override;
@@ -17,6 +17,10 @@ public:
 	std::string ToString() const override;
 
 private:
+	void UpdateDimensions();
+
 	Point m_topLeft{};
 	Point m_bottomRight{};
+	double m_width{};
+	double m_height{};
 };

@@ -1,8 +1,9 @@
 ﻿#include "pch.h"
+#include "Circle.h"
 #include "CppUnitTest.h"
-#include "../Shapes/LineSegment.h"
-#include "../Shapes/Triangle.h"
-#include "../Shapes/Rectangle.h"
+#include "LineSegment.h"
+#include "Rectangle.h"
+#include "Triangle.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -16,8 +17,6 @@ namespace ShapesTest
 {
 	TEST_CLASS(LineSegmentTest)
 	{
-	public:
-		
 		TEST_METHOD(HasLength)
 		{
 			LineSegment line({ 0.0, 0.0 }, { 5.0, 5.0 });
@@ -142,93 +141,152 @@ Edge C length: 4.5
 		TEST_METHOD(CantCreateWithBottomRightBeingToTheLeftOfTopLeft)
 		{
 			auto rectangleCreate = []() { Rectangle rectangle({ 10.0, 10.0 }, { 5.0, 5.0 }); };
-			Assert::ExpectException<std::runtime_error>(rectangleCreate, L"Bottom right is to the left of top left");
+			Assert::ExpectException<std::invalid_argument>(rectangleCreate, L"Bottom right is to the left of top left");
 		}
 
 		TEST_METHOD(CantCreateWithBottomRightBeingAboveOfTopLeft)
 		{
 			auto rectangleCreate = []() { Rectangle rectangle({ 10.0, 10.0 }, { 15.0, 20.0 }); };
-			Assert::ExpectException<std::runtime_error>(rectangleCreate, L"Bottom right is above of top left");
+			Assert::ExpectException<std::invalid_argument>(rectangleCreate, L"Bottom right is above of top left");
 		}
 
 		TEST_METHOD(HasArea)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
 			Assert::AreEqual(50.0, rectangle.GetArea(), L"Area is incorrect");
 		}
 
 		TEST_METHOD(HasPerimeter)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
 			Assert::AreEqual(30.0, rectangle.GetPerimeter(), L"Perimeter is incorrect");
 		}
 
 		TEST_METHOD(HasWidth)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
 			Assert::AreEqual(10.0, rectangle.GetWidth(), L"Width is incorrect");
 		}
 
 		TEST_METHOD(HasHeight)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
 			Assert::AreEqual(5.0, rectangle.GetHeight(), L"Height is incorrect");
 		}
 
 		TEST_METHOD(HasTopLeft)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
 			Point topLeft = rectangle.GetTopLeft();
-			Assert::IsTrue(topLeft.x == 5.0 && topLeft.y == 5.0, L"Top left corner is incorrect");
+			Assert::IsTrue(topLeft.x == 10.0 && topLeft.y == 10.0, L"Top left corner is incorrect");
 		}
 
 		TEST_METHOD(HasBottomRight)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
 			Point bottomRight = rectangle.GetBottomRight();
-			Assert::IsTrue(bottomRight.x == 15.0 && bottomRight.y == 10.0, L"Top left corner is incorrect");
+			Assert::IsTrue(bottomRight.x == 20.0 && bottomRight.y == 5.0, L"Top left corner is incorrect");
 		}
 
 		TEST_METHOD(HasWhiteFillColorByDefault)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
 			Assert::AreEqual(0xFFFFFFU, rectangle.GetFillColor(), L"Fill color is not black");
 		}
 
 		TEST_METHOD(HasGreenFillColor)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 }, 0x00FF00U);
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 }, 0x00FF00U);
 			Assert::AreEqual(0x00FF00U, rectangle.GetFillColor(), L"Fill color is not green");
 		}
 
 		TEST_METHOD(HasNoOutline)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 }, 0x00FF00U);
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 }, 0x00FF00U);
 			Assert::IsFalse(rectangle.GetOutlineColor().has_value(), L"Has outline");
 		}
 
 		TEST_METHOD(HasBlueOutlineColor)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 }, 0x00FF00U, 0x0000FFU);
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 }, 0x00FF00U, 0x0000FFU);
 			Assert::IsTrue(rectangle.GetOutlineColor().has_value(), L"No outline");
 			Assert::AreEqual(0x0000FFU, rectangle.GetOutlineColor().value(), L"Outline color is not blue");
 		}
 
 		TEST_METHOD(CanBeConvertedToString)
 		{
-			Rectangle rectangle({ 5.0, 5.0 }, { 15.0, 10.0 }, 0x00FF00U, 0x0000FFU);
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 }, 0x00FF00U, 0x0000FFU);
 			std::string expectedString{ R"(Type: Rectangle
 Area: 50.0
 Perimeter: 30.0
 Fill color: 0XFF00
 Outline color: 0XFF
-Top left: 5.0, 5.0
-Bottom right: 15.0, 15.0
+Top left: 10.0, 10.0
+Bottom right: 20.0, 5.0
 Width: 10.0
 Height: 5.0
 )" };
 
 			Assert::AreEqual(expectedString, rectangle.ToString(), L"Convertation to string failed");
+		}
+	};
+
+	TEST_CLASS(CircleTest)
+	{
+		TEST_METHOD(CantCreateWithNegativeRadius)
+		{
+			auto circleCreate = []() { Circle circle({ 20.0, 25.0 }, 10.0); };
+			Assert::ExpectException<std::invalid_argument>(circleCreate, L"Negative radius");
+		}
+
+		TEST_METHOD(HasArea)
+		{
+			Circle circle({ 20.0, 25.0 }, 10.0);
+			Assert::AreEqual(314.16, RoundNumber(circle.GetArea(), 2), L"Area is incorrect");
+		}
+
+		TEST_METHOD(HasPerimeter)
+		{
+			Circle circle({ 20.0, 25.0 }, 10.0);
+			Assert::AreEqual(62.83, RoundNumber(circle.GetPerimeter(), 2), L"Perimeter is incorrect");
+		}
+
+		TEST_METHOD(HasCenter)
+		{
+			Circle circle({ 20.0, 25.0 }, 10.0);
+			Point center = circle.GetCenter();
+			Assert::IsTrue(center.x == 20.0 && center.y == 25.0, L"Center is incorrect");
+		}
+
+		TEST_METHOD(HasRadius)
+		{
+			Circle circle({ 20.0, 25.0 }, 10.0);
+			Assert::AreEqual(10.0, circle.GetRadius(), L"Radius is incorrect");
+		}
+
+		TEST_METHOD(HasWhiteFillColorByDefault)
+		{
+			Circle circle({ 20.0, 25.0 }, 10.0);
+			Assert::AreEqual(0xFFFFFFU, circle.GetFillColor(), L"Fill color is not black");
+		}
+
+		TEST_METHOD(HasGreenFillColor)
+		{
+			Circle circle({ 20.0, 25.0 }, 10.0, 0x00FF00U);
+			Assert::AreEqual(0x00FF00U, circle.GetFillColor(), L"Fill color is not green");
+		}
+
+		TEST_METHOD(HasNoOutline)
+		{
+			Circle circle({ 20.0, 25.0 }, 10.0, 0x00FF00U);
+			Assert::IsFalse(circle.GetOutlineColor().has_value(), L"Has outline");
+		}
+
+		TEST_METHOD(HasBlueOutlineColor)
+		{
+			Circle circle({ 20.0, 25.0 }, 10.0, 0x00FF00U, 0x0000FFU);
+			Assert::IsTrue(circle.GetOutlineColor().has_value(), L"No outline");
+			Assert::AreEqual(0x0000FFU, circle.GetOutlineColor().value(), L"Outline color is not blue");
 		}
 	};
 }

@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Circle.cpp" />
     <ClCompile Include="IShape.cpp" />
     <ClCompile Include="ISolidShape.cpp" />
     <ClCompile Include="LineSegment.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Circle.h" />
     <ClInclude Include="IShape.h" />
     <ClInclude Include="ISolidShape.h" />
     <ClInclude Include="LineSegment.h" />

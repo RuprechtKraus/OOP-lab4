@@ -10,13 +10,16 @@ public:
 
 	double GetArea() const override;
 	double GetPerimeter() const override;
+	double GetEdgeA() const;
+	double GetEdgeB() const;
+	double GetEdgeC() const;
 	Point GetVertex1() const;
 	Point GetVertex2() const;
 	Point GetVertex3() const;
 	std::string ToString() const override;
 
 private:
-	void CalculateEdges();
+	void UpdateEdges();
 
 	Point m_vertex1{};
 	Point m_vertex2{};
