@@ -1,21 +1,29 @@
 #include "Circle.h"
+#include <cmath>
+#include <numbers>
+#include <sstream>
 
 Circle::Circle(const Point& center, double radius,
 	uint32_t fillColor, std::optional<uint32_t> outlineColor)
 	: ISolidShape(ShapeType::Circle, fillColor, outlineColor)
 	, m_center(center)
-	, m_radius(radius)
 {
+	if (radius < 0)
+	{
+		throw std::invalid_argument("Negative radius");
+	}
+
+	m_radius = radius;
 }
 
 double Circle::GetArea() const
 {
-	return 0.0;
+	return std::numbers::pi * std::pow(m_radius, 2);
 }
 
 double Circle::GetPerimeter() const
 {
-	return 0.0;
+	return 2 * std::numbers::pi * m_radius;
 }
 
 double Circle::GetRadius() const
@@ -30,5 +38,14 @@ Point Circle::GetCenter() const
 
 std::string Circle::ToString() const
 {
-	return "";
+	std::ostringstream ss;
+
+	PrepareStream(ss);
+	ss << ISolidShape::ToString()
+	   << "\nCenter: " << m_center.x << ", " << m_center.y
+	   << "\nRadius: " << m_radius
+	   << std::endl;
+	ResetStream(ss);
+
+	return ss.str();
 }

@@ -60,7 +60,6 @@ Start: 0.0, 0.0
 End: 5.5, 5.5
 Length: 7.8
 )" };
-
 			Assert::AreEqual(expectedString, line.ToString(), L"Convertation to string failed");
 		}
 	};
@@ -131,7 +130,6 @@ Edge A length: 4.5
 Edge B length: 4.0
 Edge C length: 4.5
 )" };
-
 			Assert::AreEqual(expectedString, triangle.ToString(), L"Convertation to string failed");
 		}
 	};
@@ -226,7 +224,6 @@ Bottom right: 20.0, 5.0
 Width: 10.0
 Height: 5.0
 )" };
-
 			Assert::AreEqual(expectedString, rectangle.ToString(), L"Convertation to string failed");
 		}
 	};
@@ -235,7 +232,7 @@ Height: 5.0
 	{
 		TEST_METHOD(CantCreateWithNegativeRadius)
 		{
-			auto circleCreate = []() { Circle circle({ 20.0, 25.0 }, 10.0); };
+			auto circleCreate = []() { Circle circle({ 20.0, 25.0 }, -10.0); };
 			Assert::ExpectException<std::invalid_argument>(circleCreate, L"Negative radius");
 		}
 
@@ -287,6 +284,20 @@ Height: 5.0
 			Circle circle({ 20.0, 25.0 }, 10.0, 0x00FF00U, 0x0000FFU);
 			Assert::IsTrue(circle.GetOutlineColor().has_value(), L"No outline");
 			Assert::AreEqual(0x0000FFU, circle.GetOutlineColor().value(), L"Outline color is not blue");
+		}
+
+		TEST_METHOD(CanBeConvertedToString)
+		{
+			Circle circle({ 20.0, 25.0 }, 10.0, 0x00FF00U, 0x0000FFU);
+			std::string expectedString{ R"(Type: Circle
+Area: 314.2
+Perimeter: 62.8
+Fill color: 0XFF00
+Outline color: 0XFF
+Center: 20.0, 25.0
+Radius: 10.0
+)" };
+			Assert::AreEqual(expectedString, circle.ToString(), L"Convertation to string failed");
 		}
 	};
 }
