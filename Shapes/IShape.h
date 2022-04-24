@@ -18,6 +18,6 @@ protected:
 	static void PrepareStream(std::ostream& os);
 	static void ResetStream(std::ostream& os);
 
-	ShapeType m_shape{};
+	const ShapeType m_shape{};
 	std::optional<uint32_t> m_outlineColor{};
 };

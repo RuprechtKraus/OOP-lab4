@@ -5,7 +5,7 @@
 class LineSegment final : public IShape
 {
 public:
-	LineSegment(Point start, Point end, uint32_t color = 0x000000U);
+	LineSegment(const Point& start, const Point& end, uint32_t color = 0x000000U);
 
 	double GetArea() const override;
 	double GetPerimeter() const override;

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 
-LineSegment::LineSegment(Point start, Point end, uint32_t color)
+LineSegment::LineSegment(const Point& start, const Point& end, uint32_t color)
 	: IShape(ShapeType::LineSegment, std::nullopt)
 	, m_start(start)
 	, m_end(end)
@@ -44,6 +44,7 @@ Point LineSegment::GetEndPoint() const
 std::string LineSegment::ToString() const
 {
 	std::ostringstream ss;
+
 	PrepareStream(ss);
 	ss << IShape::ToString()
 	   << "\nColor: " << m_color
