@@ -13,17 +13,17 @@ LineSegment::LineSegment(const Point& start, const Point& end, uint32_t color)
 
 double LineSegment::GetArea() const
 {
-	return Distance(m_start, m_end);
+	return 0.0;
 }
 
 double LineSegment::GetLength() const
 {
-	return GetArea();
+	return Distance(m_start, m_end);
 }
 
 double LineSegment::GetPerimeter() const
 {
-	return 0.0;
+	return GetLength();
 }
 
 uint32_t LineSegment::GetColor() const

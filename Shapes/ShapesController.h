@@ -26,16 +26,19 @@ public:
 
 	HandlingResult HandleCommand();
 	void ShowHelp();
-	void ShowShapes();
 
 private:
 	using Handler = std::function<HandlingResult(std::istream& args)>;
 	using ActionMap = std::map<std::string, Handler>;
 
+	HandlingResult ExecuteHandlingExceptions(Handler handler, std::istream& args);
 	HandlingResult CreateLineSegment(std::istream& args);
 	HandlingResult CreateTriangle(std::istream& args);
 	HandlingResult CreateRectangle(std::istream& args);
 	HandlingResult CreateCircle(std::istream& args);
+	HandlingResult ShowBiggestArea(std::istream& args);
+	HandlingResult ShowSmallestPerimeter(std::istream& args);
+	HandlingResult ShowShapes(std::istream& args);
 
 	std::ostream& m_output;
 	std::istream& m_input;
@@ -45,7 +48,9 @@ private:
 		{ "triangle", [this](std::istream& args) { return CreateTriangle(args); } },
 		{ "rectangle", [this](std::istream& args) { return CreateRectangle(args); } }, 
 		{ "circle", [this](std::istream& args) { return CreateCircle(args); } },
-		{ "show", [this](std::istream& args) { ShowShapes(); return HandlingResult::Success; } },
+		{ "show", [this](std::istream& args) { return ShowShapes(args); } },
+		{ "bigarea", [this](std::istream& args) { return ShowBiggestArea(args); } },
+		{ "smallperim", [this](std::istream& args) { return ShowSmallestPerimeter(args); } },
 		{ "help", [this](std::istream& args) { ShowHelp(); return HandlingResult::Success; } },
 		{ "exit", [this](std::istream& args) { return HandlingResult::Exit; } }
 	};

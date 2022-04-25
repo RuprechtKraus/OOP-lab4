@@ -15,7 +15,7 @@ ISolidShape::~ISolidShape()
 std::string ISolidShape::ToString() const
 {
 	std::ostringstream ss;
-
+	double a = GetArea();
 	PrepareStream(ss);
 	ss << IShape::ToString()
 	   << "\nArea: " << GetArea()

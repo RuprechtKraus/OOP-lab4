@@ -2,9 +2,10 @@
 #include <algorithm>
 #include <optional>
 #include <sstream>
+#include "ShapeParamsCompare.h"
 
-void ToLowerString(std::string& str);
-std::optional<uint32_t> StringToColorCode(const std::string& str);
+static void ToLowerString(std::string& str);
+static std::optional<uint32_t> StringToColorCode(const std::string& str);
 
 ShapesController::ShapesController(std::istream& input, std::ostream& output)
 	: m_input(input)
@@ -21,20 +22,41 @@ HandlingResult ShapesController::HandleCommand()
 	auto it = m_actionMap.find(action);
 	if (it != m_actionMap.cend())
 	{
-		return it->second(m_input);
+		return ExecuteHandlingExceptions(it->second, m_input);
 	}
 
 	return HandlingResult::UnknownCommand;
+}
+
+HandlingResult ShapesController::ExecuteHandlingExceptions(Handler handler, std::istream& args)
+{
+	try
+	{
+		return handler(args);
+	}
+	catch (const std::exception& e)
+	{
+		m_output << e.what() << std::endl;
+		return HandlingResult::Fail;
+	}
 }
 
 HandlingResult ShapesController::CreateLineSegment(std::istream& args)
 {
 	double x1{}, y1{};
 	double x2{}, y2{};
-	std::string color{};
+	std::string colorStr{};
+	std::optional<uint32_t> color{};
 
-	args >> x1 >> y1 >> x2 >> y2 >> color;
-	shapes.emplace_back(new LineSegment({ x1, y1 }, { x2, y2 }, std::stoul(color, 0, 16)));
+	args >> x1 >> y1 >> x2 >> y2 >> colorStr;
+
+	color = StringToColorCode(colorStr);
+	if (!color.has_value())
+	{
+		throw std::invalid_argument("LineSegment must have color");
+	}
+
+	shapes.emplace_back(new LineSegment({ x1, y1 }, { x2, y2 }, color.value()));
 
 	return HandlingResult::Success;
 }
@@ -73,7 +95,7 @@ HandlingResult ShapesController::CreateRectangle(std::istream& args)
 	fillColor = StringToColorCode(fillColorStr);
 	outlineColor = StringToColorCode(outlineColorStr);
 
-	shapes.emplace_back(new Rectangle({ x1, y1 }, {x2,y2}, fillColor, outlineColor));
+	shapes.emplace_back(new Rectangle({ x1, y1 }, { x2, y2 }, fillColor, outlineColor));
 
 	return HandlingResult::Success;
 }
@@ -97,6 +119,50 @@ HandlingResult ShapesController::CreateCircle(std::istream& args)
 	return HandlingResult::Success;
 }
 
+HandlingResult ShapesController::ShowBiggestArea(std::istream& args)
+{
+	if (shapes.empty())
+	{
+		m_output << "No shapes" << std::endl;
+		return HandlingResult::Success;
+	}
+
+	auto it = std::max_element(shapes.cbegin(), shapes.cend(), AreaCompare);
+	m_output << it->get()->ToString();
+
+	return HandlingResult::Success;
+}
+
+HandlingResult ShapesController::ShowSmallestPerimeter(std::istream& args)
+{
+	if (shapes.empty())
+	{
+		m_output << "No shapes" << std::endl;
+		return HandlingResult::Success;
+	}
+
+	auto it = std::min_element(shapes.cbegin(), shapes.cend(), PerimeterCompare);
+	m_output << it->get()->ToString();
+
+	return HandlingResult::Success;
+}
+
+HandlingResult ShapesController::ShowShapes(std::istream& args)
+{
+	if (shapes.empty())
+	{
+		m_output << "No shapes" << std::endl;
+		return HandlingResult::Success;
+	}
+
+	for (const auto& shape : shapes)
+	{
+		m_output << shape->ToString() << '\n';
+	}
+
+	return HandlingResult::Success;
+}
+
 void ShapesController::ShowHelp()
 {
 	m_output << "Add line: line <x1> <y1> <x2> <y2> <color>"
@@ -104,17 +170,11 @@ void ShapesController::ShowHelp()
 			 << "\nAdd rectangle: rectangle <x1> <y1> <x2> <y2> <fill_color|No> <outline_color|No>"
 			 << "\nAdd circle: circle <x> <y> <radius> <fill_color|No> <outline_color|No>"
 			 << "\nShow shapes: show"
+			 << "\nShow shape with biggest area: bigarea"
+			 << "\nShow shape with smaller perimeter: smallperim"
 			 << "\nShow help: help"
 			 << "\nExit program: exit"
 			 << std::endl;
-}
-
-void ShapesController::ShowShapes()
-{
-	for (const auto& shape : shapes)
-	{
-		m_output << shape->ToString() << '\n';
-	}
 }
 
 void ToLowerString(std::string& str)
@@ -127,10 +187,17 @@ std::optional<uint32_t> StringToColorCode(const std::string& str)
 	std::string _str{ str };
 	ToLowerString(_str);
 
-	if (_str != "no")
+	if (_str == "no")
+	{
+		return std::nullopt;
+	}
+	
+	try
 	{
 		return std::stoul(_str, 0, 16);
 	}
-
-	return std::nullopt;
+	catch (const std::exception& e)
+	{
+		throw std::invalid_argument("Wrong color");
+	}
 }
