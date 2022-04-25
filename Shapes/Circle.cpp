@@ -4,7 +4,7 @@
 #include <sstream>
 
 Circle::Circle(const Point& center, double radius,
-	uint32_t fillColor, std::optional<uint32_t> outlineColor)
+	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
 	: ISolidShape(ShapeType::Circle, fillColor, outlineColor)
 	, m_center(center)
 {

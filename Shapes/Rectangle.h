@@ -6,7 +6,7 @@ class Rectangle final : public ISolidShape
 {
 public:
 	Rectangle(const Point& topLeft, const Point& bottomRight,
-		uint32_t fillColor = 0xFFFFFFU, std::optional<uint32_t> outlineColor = std::nullopt);
+		std::optional<uint32_t> fillColor = 0xFFFFFFU, std::optional<uint32_t> outlineColor = std::nullopt);
 
 	double GetArea() const override;
 	double GetPerimeter() const override;

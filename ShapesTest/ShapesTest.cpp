@@ -93,13 +93,13 @@ Length: 7.8
 		TEST_METHOD(HasWhiteFillColorByDefault)
 		{
 			Triangle triangle({ 0.0, 0.0 }, { 2.0, 4.0 }, { 4.0, 0.0 });
-			Assert::AreEqual(0xFFFFFFU, triangle.GetFillColor(), L"Fill color is not black");
+			Assert::AreEqual(0xFFFFFFU, triangle.GetFillColor().value(), L"Fill color is not black");
 		}
 
 		TEST_METHOD(HasGreenFillColor)
 		{
 			Triangle triangle({ 0.0, 0.0 }, { 2.0, 4.0 }, { 4.0, 0.0 }, 0x00FF00U);
-			Assert::AreEqual(0x00FF00U, triangle.GetFillColor(), L"Fill color is not green");
+			Assert::AreEqual(0x00FF00U, triangle.GetFillColor().value(), L"Fill color is not green");
 		}
 
 		TEST_METHOD(HasNoOutline)
@@ -189,13 +189,13 @@ Edge C length: 4.5
 		TEST_METHOD(HasWhiteFillColorByDefault)
 		{
 			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
-			Assert::AreEqual(0xFFFFFFU, rectangle.GetFillColor(), L"Fill color is not black");
+			Assert::AreEqual(0xFFFFFFU, rectangle.GetFillColor().value(), L"Fill color is not black");
 		}
 
 		TEST_METHOD(HasGreenFillColor)
 		{
 			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 }, 0x00FF00U);
-			Assert::AreEqual(0x00FF00U, rectangle.GetFillColor(), L"Fill color is not green");
+			Assert::AreEqual(0x00FF00U, rectangle.GetFillColor().value(), L"Fill color is not green");
 		}
 
 		TEST_METHOD(HasNoOutline)
@@ -264,13 +264,13 @@ Height: 5.0
 		TEST_METHOD(HasWhiteFillColorByDefault)
 		{
 			Circle circle({ 20.0, 25.0 }, 10.0);
-			Assert::AreEqual(0xFFFFFFU, circle.GetFillColor(), L"Fill color is not black");
+			Assert::AreEqual(0xFFFFFFU, circle.GetFillColor().value(), L"Fill color is not black");
 		}
 
 		TEST_METHOD(HasGreenFillColor)
 		{
 			Circle circle({ 20.0, 25.0 }, 10.0, 0x00FF00U);
-			Assert::AreEqual(0x00FF00U, circle.GetFillColor(), L"Fill color is not green");
+			Assert::AreEqual(0x00FF00U, circle.GetFillColor().value(), L"Fill color is not green");
 		}
 
 		TEST_METHOD(HasNoOutline)

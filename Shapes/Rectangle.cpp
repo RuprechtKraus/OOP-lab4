@@ -2,7 +2,7 @@
 #include <sstream>
 
 Rectangle::Rectangle(const Point& topLeft, const Point& bottomRight,
-	uint32_t fillColor, std::optional<uint32_t> outlineColor)
+	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
 	: ISolidShape(ShapeType::Rectangle, fillColor, outlineColor)
 {
 	if (bottomRight.x < topLeft.x || bottomRight.y > topLeft.y)

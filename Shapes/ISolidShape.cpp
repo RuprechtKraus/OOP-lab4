@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <sstream>
 
-ISolidShape::ISolidShape(ShapeType type, uint32_t fillColor, std::optional<uint32_t> outlineColor)
+ISolidShape::ISolidShape(ShapeType type, std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
 	: IShape(type, outlineColor)
 	, m_fillColor(fillColor)
 {
@@ -19,8 +19,11 @@ std::string ISolidShape::ToString() const
 	PrepareStream(ss);
 	ss << IShape::ToString()
 	   << "\nArea: " << GetArea()
-	   << "\nPerimeter: " << GetPerimeter()
-	   << "\nFill color: " << m_fillColor;
+	   << "\nPerimeter: " << GetPerimeter();
+	if (m_fillColor)
+	{
+		ss << "\nFill color: " << m_fillColor.value();
+	}
 	if (m_outlineColor)
 	{
 		ss << "\nOutline color: " << m_outlineColor.value();
@@ -30,7 +33,7 @@ std::string ISolidShape::ToString() const
 	return ss.str();
 };
 
-uint32_t ISolidShape::GetFillColor() const
+std::optional<uint32_t> ISolidShape::GetFillColor() const
 {
 	return m_fillColor;
 }

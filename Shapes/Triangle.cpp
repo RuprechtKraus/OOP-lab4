@@ -4,7 +4,7 @@
 #include <sstream>
 
 Triangle::Triangle(const Point& v1, const Point& v2, const Point& v3, 
-	uint32_t fillColor, std::optional<uint32_t> outlineColor)
+	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
 	: ISolidShape(ShapeType::Triangle, fillColor, outlineColor)
 	, m_vertex1(v1)
 	, m_vertex2(v2)
