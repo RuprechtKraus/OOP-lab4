@@ -3,23 +3,22 @@
 
 int main()
 {
-	ShapesController controller(std::cin, std::cout);
+	ShapesController controller(std::cout);
 	controller.ShowHelp();
 
-	std::string command;
+	std::string commandLine;
 	HandlingResult handlingResult{ HandlingResult::Success };
 
 	while (handlingResult != HandlingResult::Exit)
 	{
 		std::cout << "> ";
-		handlingResult = controller.HandleCommand();
+		std::getline(std::cin, commandLine);
+		handlingResult = controller.HandleCommand(commandLine);
 
 		if (handlingResult == HandlingResult::UnknownCommand)
 		{
 			std::cout << "Unknown command" << std::endl;
 			std::cin.clear();
 		}
-
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	}
 }
