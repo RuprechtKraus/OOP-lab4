@@ -22,10 +22,37 @@ HandlingResult ShapesController::HandleCommand(const std::string& commandLine)
 	auto it = m_actionMap.find(action);
 	if (it != m_actionMap.cend())
 	{
-		return ExecuteHandlingExceptions(it->second, ss);
+		return ExecuteHandlingExceptions(GetActionHandler(it->second), ss);
 	}
 
 	return HandlingResult::UnknownCommand;
+}
+
+ShapesController::Handler ShapesController::GetActionHandler(Action action)
+{
+	switch (action)
+	{
+	case ShapesController::Action::CreateLineSegment:
+		return [this](std::istringstream& args) { return CreateLineSegment(args); };
+	case ShapesController::Action::CreateTriangle:
+		return [this](std::istringstream& args) { return CreateTriangle(args); };
+	case ShapesController::Action::CreateRectangle:
+		return [this](std::istringstream& args) { return CreateRectangle(args); };
+	case ShapesController::Action::CreateCircle:
+		return [this](std::istringstream & args) { return CreateCircle(args); };
+	case ShapesController::Action::ShowShapes:
+		return [this](std::istringstream& args) { return ShowShapes(args); };
+	case ShapesController::Action::ShowBiggestAreaShape:
+		return [this](std::istringstream& args) { return ShowBiggestArea(args); };
+	case ShapesController::Action::ShowSmallestPerimeterShape:
+		return [this](std::istringstream& args) { return ShowSmallestPerimeter(args); };
+	case ShapesController::Action::ShowHelp:
+		return [this](std::istringstream& args) { ShowHelp(); return HandlingResult::Success; };
+	case ShapesController::Action::Exit:
+		return [this](std::istringstream& args) { return HandlingResult::Exit; };
+	default:
+		throw std::runtime_error("No handler for action");
+	}
 }
 
 HandlingResult ShapesController::ExecuteHandlingExceptions(Handler handler, std::istringstream& args)
