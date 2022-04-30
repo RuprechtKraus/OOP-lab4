@@ -7,10 +7,6 @@ IShape::IShape(ShapeType type, std::optional<uint32_t> outlineColor)
 {
 }
 
-IShape::~IShape()
-{
-}
-
 std::optional<uint32_t> IShape::GetOutlineColor() const
 {
 	return m_outlineColor;

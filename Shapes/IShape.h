@@ -2,12 +2,13 @@
 #include "ShapeType.h"
 #include <optional>
 #include <string>
+#include "ICanvasDrawable.h"
 
-class IShape
+class IShape : ICanvasDrawable
 {
 public:
 	IShape(ShapeType type, std::optional<uint32_t> outlineColor);
-	virtual ~IShape();
+	virtual ~IShape() = default;
 
 	virtual double GetArea() const = 0;
 	virtual double GetPerimeter() const = 0;

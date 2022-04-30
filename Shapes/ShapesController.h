@@ -22,9 +22,9 @@ enum class HandlingResult
 class ShapesController
 {
 public:
-	ShapesController(std::ostream& output);
+	ShapesController(std::istream& input, std::ostream& output);
 
-	HandlingResult HandleCommand(const std::string& commandLine);
+	HandlingResult HandleCommand();
 	void ShowHelp();
 
 private:
@@ -41,20 +41,21 @@ private:
 		Exit
 	};
 
-	using Handler = std::function<HandlingResult(std::istringstream& args)>;
+	using Handler = std::function<HandlingResult(std::istream& args)>;
 	using ActionMap = std::map<std::string, Action>;
 
-	HandlingResult ExecuteHandlingExceptions(Handler handler, std::istringstream& args);
-	HandlingResult CreateLineSegment(std::istringstream& args);
-	HandlingResult CreateTriangle(std::istringstream& args);
-	HandlingResult CreateRectangle(std::istringstream& args);
-	HandlingResult CreateCircle(std::istringstream& args);
-	HandlingResult ShowBiggestArea(std::istringstream& args);
-	HandlingResult ShowSmallestPerimeter(std::istringstream& args);
-	HandlingResult ShowShapes(std::istringstream& args);
+	HandlingResult ExecuteHandlingExceptions(Handler handler, std::istream& args);
+	HandlingResult CreateLineSegment(std::istream& args);
+	HandlingResult CreateTriangle(std::istream& args);
+	HandlingResult CreateRectangle(std::istream& args);
+	HandlingResult CreateCircle(std::istream& args);
+	HandlingResult ShowBiggestArea(std::istream& args);
+	HandlingResult ShowSmallestPerimeter(std::istream& args);
+	HandlingResult ShowShapes(std::istream& args);
 	Handler GetActionHandler(Action action);
 
 	std::ostream& m_output;
+	std::istream& m_input;
 	std::vector<std::unique_ptr<IShape>> shapes{};
 
 	const ActionMap m_actionMap = {

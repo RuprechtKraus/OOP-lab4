@@ -7,22 +7,22 @@
 static void ToLowerString(std::string& str);
 static std::optional<uint32_t> StringToColorCode(const std::string& str);
 
-ShapesController::ShapesController(std::ostream& output)
-	: m_output(output)
+ShapesController::ShapesController(std::istream& input, std::ostream& output)
+	: m_input(input)
+	, m_output(output)
 {
 }
 
-HandlingResult ShapesController::HandleCommand(const std::string& commandLine)
+HandlingResult ShapesController::HandleCommand()
 {
-	std::istringstream ss(commandLine);
 	std::string action{};
-	ss >> action;
+	m_input >> action;
 	ToLowerString(action);
 
 	auto it = m_actionMap.find(action);
 	if (it != m_actionMap.cend())
 	{
-		return ExecuteHandlingExceptions(GetActionHandler(it->second), ss);
+		return ExecuteHandlingExceptions(GetActionHandler(it->second), m_input);
 	}
 
 	return HandlingResult::UnknownCommand;
@@ -33,29 +33,29 @@ ShapesController::Handler ShapesController::GetActionHandler(Action action)
 	switch (action)
 	{
 	case ShapesController::Action::CreateLineSegment:
-		return [this](std::istringstream& args) { return CreateLineSegment(args); };
+		return [this](std::istream& args) { return CreateLineSegment(args); };
 	case ShapesController::Action::CreateTriangle:
-		return [this](std::istringstream& args) { return CreateTriangle(args); };
+		return [this](std::istream& args) { return CreateTriangle(args); };
 	case ShapesController::Action::CreateRectangle:
-		return [this](std::istringstream& args) { return CreateRectangle(args); };
+		return [this](std::istream& args) { return CreateRectangle(args); };
 	case ShapesController::Action::CreateCircle:
-		return [this](std::istringstream & args) { return CreateCircle(args); };
+		return [this](std::istream& args) { return CreateCircle(args); };
 	case ShapesController::Action::ShowShapes:
-		return [this](std::istringstream& args) { return ShowShapes(args); };
+		return [this](std::istream& args) { return ShowShapes(args); };
 	case ShapesController::Action::ShowBiggestAreaShape:
-		return [this](std::istringstream& args) { return ShowBiggestArea(args); };
+		return [this](std::istream& args) { return ShowBiggestArea(args); };
 	case ShapesController::Action::ShowSmallestPerimeterShape:
-		return [this](std::istringstream& args) { return ShowSmallestPerimeter(args); };
+		return [this](std::istream& args) { return ShowSmallestPerimeter(args); };
 	case ShapesController::Action::ShowHelp:
-		return [this](std::istringstream& args) { ShowHelp(); return HandlingResult::Success; };
+		return [this](std::istream& args) { ShowHelp(); return HandlingResult::Success; };
 	case ShapesController::Action::Exit:
-		return [this](std::istringstream& args) { return HandlingResult::Exit; };
+		return [this](std::istream& args) { return HandlingResult::Exit; };
 	default:
 		throw std::runtime_error("No handler for action");
 	}
 }
 
-HandlingResult ShapesController::ExecuteHandlingExceptions(Handler handler, std::istringstream& args)
+HandlingResult ShapesController::ExecuteHandlingExceptions(Handler handler, std::istream& args)
 {
 	try
 	{
@@ -68,7 +68,7 @@ HandlingResult ShapesController::ExecuteHandlingExceptions(Handler handler, std:
 	}
 }
 
-HandlingResult ShapesController::CreateLineSegment(std::istringstream& args)
+HandlingResult ShapesController::CreateLineSegment(std::istream& args)
 {
 	double x1{}, y1{};
 	double x2{}, y2{};
@@ -88,7 +88,7 @@ HandlingResult ShapesController::CreateLineSegment(std::istringstream& args)
 	return HandlingResult::Success;
 }
 
-HandlingResult ShapesController::CreateTriangle(std::istringstream& args)
+HandlingResult ShapesController::CreateTriangle(std::istream& args)
 {
 	double x1{}, y1{};
 	double x2{}, y2{};
@@ -108,7 +108,7 @@ HandlingResult ShapesController::CreateTriangle(std::istringstream& args)
 	return HandlingResult::Success;
 }
 
-HandlingResult ShapesController::CreateRectangle(std::istringstream& args)
+HandlingResult ShapesController::CreateRectangle(std::istream& args)
 {
 	double x1{}, y1{};
 	double x2{}, y2{};
@@ -127,7 +127,7 @@ HandlingResult ShapesController::CreateRectangle(std::istringstream& args)
 	return HandlingResult::Success;
 }
 
-HandlingResult ShapesController::CreateCircle(std::istringstream& args)
+HandlingResult ShapesController::CreateCircle(std::istream& args)
 {
 	double x{}, y{};
 	double radius{};
@@ -146,7 +146,7 @@ HandlingResult ShapesController::CreateCircle(std::istringstream& args)
 	return HandlingResult::Success;
 }
 
-HandlingResult ShapesController::ShowBiggestArea(std::istringstream&)
+HandlingResult ShapesController::ShowBiggestArea(std::istream&)
 {
 	if (shapes.empty())
 	{
@@ -160,7 +160,7 @@ HandlingResult ShapesController::ShowBiggestArea(std::istringstream&)
 	return HandlingResult::Success;
 }
 
-HandlingResult ShapesController::ShowSmallestPerimeter(std::istringstream&)
+HandlingResult ShapesController::ShowSmallestPerimeter(std::istream&)
 {
 	if (shapes.empty())
 	{
@@ -174,7 +174,7 @@ HandlingResult ShapesController::ShowSmallestPerimeter(std::istringstream&)
 	return HandlingResult::Success;
 }
 
-HandlingResult ShapesController::ShowShapes(std::istringstream&)
+HandlingResult ShapesController::ShowShapes(std::istream&)
 {
 	if (shapes.empty())
 	{
@@ -223,7 +223,7 @@ std::optional<uint32_t> StringToColorCode(const std::string& str)
 	{
 		return std::stoul(_str, 0, 16);
 	}
-	catch (const std::exception& e)
+	catch (const std::exception&)
 	{
 		throw std::invalid_argument("Wrong color");
 	}

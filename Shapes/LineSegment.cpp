@@ -56,3 +56,7 @@ std::string LineSegment::ToString() const
 
 	return ss.str();
 }
+
+void LineSegment::Draw(ICanvas& canvas) const
+{
+}

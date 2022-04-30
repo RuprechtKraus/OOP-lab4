@@ -1,4 +1,5 @@
 #pragma once
+#include "ICanvas.h"
 #include "IShape.h"
 #include "Point.h"
 
@@ -14,6 +15,7 @@ public:
 	Point GetStartPoint() const;
 	Point GetEndPoint() const;
 	std::string ToString() const override;
+	void Draw(ICanvas& canvas) const override;
 
 private:
 	Point m_start{};

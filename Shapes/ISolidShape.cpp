@@ -8,10 +8,6 @@ ISolidShape::ISolidShape(ShapeType type, std::optional<uint32_t> fillColor, std:
 {
 }
 
-ISolidShape::~ISolidShape()
-{
-}
-
 std::string ISolidShape::ToString() const
 {
 	std::ostringstream ss;
