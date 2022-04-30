@@ -63,7 +63,8 @@ Point Triangle::GetVertex3() const
 
 void Triangle::Draw(ICanvas& canvas) const
 {
-
+	std::vector<Point> points{ m_vertex1, m_vertex2, m_vertex3 };
+	canvas.DrawPolygon(points, m_fillColor, m_outlineColor);
 }
 
 std::string Triangle::ToString() const

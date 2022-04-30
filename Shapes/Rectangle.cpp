@@ -5,7 +5,7 @@ Rectangle::Rectangle(const Point& topLeft, const Point& bottomRight,
 	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
 	: ISolidShape(ShapeType::Rectangle, fillColor, outlineColor)
 {
-	if (bottomRight.x < topLeft.x || bottomRight.y > topLeft.y)
+	if (bottomRight.x < topLeft.x || bottomRight.y < topLeft.y)
 	{
 		throw std::invalid_argument("Incorrect bottom right vertex positioning");
 	}
@@ -18,7 +18,7 @@ Rectangle::Rectangle(const Point& topLeft, const Point& bottomRight,
 void Rectangle::UpdateDimensions()
 {
 	m_width = m_bottomRight.x - m_topLeft.x;
-	m_height = m_topLeft.y - m_bottomRight.y;
+	m_height = m_bottomRight.y - m_topLeft.y;
 }
 
 double Rectangle::GetArea() const
@@ -53,7 +53,13 @@ Point Rectangle::GetBottomRight() const
 
 void Rectangle::Draw(ICanvas& canvas) const
 {
-
+	std::vector<Point> points{
+		m_topLeft,
+		{ m_topLeft.x + m_width, m_topLeft.y },
+		m_bottomRight,
+		{ m_topLeft.x, m_topLeft.y + m_height }
+	};
+	canvas.DrawPolygon(points, m_fillColor, m_outlineColor);
 }
 
 std::string Rectangle::ToString() const
