@@ -7,12 +7,12 @@ Canvas::Canvas(sf::RenderWindow& window)
 
 sf::Color HexToRGBA(uint32_t hexColor);
 
-void SetPolygonColors(sf::ConvexShape& shape, 
+void SetShapeColors(sf::Shape& shape, 
 	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor);
 
-void SetPolygonFillColor(sf::ConvexShape& shape, std::optional<uint32_t> fillColor);
+void SetShapeFillColor(sf::Shape& shape, std::optional<uint32_t> fillColor);
 
-void SetPolygonOutlineColor(sf::ConvexShape& shape, std::optional<uint32_t> outlineColor);
+void SetShapeOutlineColor(sf::Shape& shape, std::optional<uint32_t> outlineColor);
 
 void Canvas::DrawLine(const Point& start, const Point& end, uint32_t color)
 {
@@ -37,7 +37,7 @@ void Canvas::DrawPolygon(const std::vector<Point>& points,
 	}
 
 	convex.setOutlineThickness(1);
-	SetPolygonColors(convex, fillColor, outlineColor);
+	SetShapeColors(convex, fillColor, outlineColor);
 
 	m_window.draw(convex);
 }
@@ -45,6 +45,13 @@ void Canvas::DrawPolygon(const std::vector<Point>& points,
 void Canvas::DrawCircle(const Point& center, double radius,
 	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
 {
+	sf::CircleShape circle(radius);
+
+	circle.move(static_cast<float>(center.x), static_cast<float>(center.y));
+	circle.setOutlineThickness(1);
+	SetShapeColors(circle, fillColor, outlineColor);
+
+	m_window.draw(circle);
 }
 
 sf::Color HexToRGBA(uint32_t hexColor)
@@ -52,14 +59,14 @@ sf::Color HexToRGBA(uint32_t hexColor)
 	return sf::Color((hexColor << 8) | 0x000000FFU);
 }
 
-void SetPolygonColors(sf::ConvexShape& shape, 
+void SetShapeColors(sf::Shape& shape, 
 	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
 {
-	SetPolygonFillColor(shape, fillColor);
-	SetPolygonOutlineColor(shape, outlineColor);
+	SetShapeFillColor(shape, fillColor);
+	SetShapeOutlineColor(shape, outlineColor);
 }
 
-void SetPolygonFillColor(sf::ConvexShape& shape, std::optional<uint32_t> fillColor)
+void SetShapeFillColor(sf::Shape& shape, std::optional<uint32_t> fillColor)
 {
 	if (fillColor)
 	{
@@ -71,7 +78,7 @@ void SetPolygonFillColor(sf::ConvexShape& shape, std::optional<uint32_t> fillCol
 	}
 }
 
-void SetPolygonOutlineColor(sf::ConvexShape& shape, std::optional<uint32_t> outlineColor)
+void SetShapeOutlineColor(sf::Shape& shape, std::optional<uint32_t> outlineColor)
 {
 	if (outlineColor)
 	{

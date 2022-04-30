@@ -38,7 +38,7 @@ Point Circle::GetCenter() const
 
 void Circle::Draw(ICanvas& canvas) const
 {
-
+	canvas.DrawCircle(m_center, m_radius, m_fillColor, m_outlineColor);
 }
 
 std::string Circle::ToString() const
