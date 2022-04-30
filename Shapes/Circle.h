@@ -12,6 +12,7 @@ public:
 	double GetPerimeter() const override;
 	double GetRadius() const;
 	Point GetCenter() const;
+	void Draw(ICanvas& canvas) const;
 	std::string ToString() const override;
 
 private:

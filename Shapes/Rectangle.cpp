@@ -51,6 +51,11 @@ Point Rectangle::GetBottomRight() const
 	return m_bottomRight;
 }
 
+void Rectangle::Draw(ICanvas& canvas) const
+{
+
+}
+
 std::string Rectangle::ToString() const
 {
 	std::ostringstream ss;

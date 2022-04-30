@@ -36,6 +36,11 @@ Point Circle::GetCenter() const
 	return m_center;
 }
 
+void Circle::Draw(ICanvas& canvas) const
+{
+
+}
+
 std::string Circle::ToString() const
 {
 	std::ostringstream ss;

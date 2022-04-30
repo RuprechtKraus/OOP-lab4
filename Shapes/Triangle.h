@@ -16,6 +16,7 @@ public:
 	Point GetVertex1() const;
 	Point GetVertex2() const;
 	Point GetVertex3() const;
+	void Draw(ICanvas& canvas) const override;
 	std::string ToString() const override;
 
 private:

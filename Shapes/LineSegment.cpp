@@ -41,6 +41,11 @@ Point LineSegment::GetEndPoint() const
 	return m_end;
 }
 
+void LineSegment::Draw(ICanvas& canvas) const
+{
+	canvas.DrawLine(m_start, m_end, m_color);
+}
+
 std::string LineSegment::ToString() const
 {
 	std::ostringstream ss;
@@ -55,8 +60,4 @@ std::string LineSegment::ToString() const
 	ResetStream(ss);
 
 	return ss.str();
-}
-
-void LineSegment::Draw(ICanvas& canvas) const
-{
 }

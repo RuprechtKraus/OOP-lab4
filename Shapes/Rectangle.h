@@ -14,6 +14,7 @@ public:
 	double GetHeight() const;
 	Point GetTopLeft() const;
 	Point GetBottomRight() const;
+	void Draw(ICanvas& canvas) const override;
 	std::string ToString() const override;
 
 private:

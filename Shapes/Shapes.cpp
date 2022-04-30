@@ -1,5 +1,6 @@
 ﻿#include "ShapesController.h"
 #include <iostream>
+#include <limits>
 
 int main()
 {
@@ -16,7 +17,7 @@ int main()
 		if (handlingResult == HandlingResult::UnknownCommand)
 		{
 			std::cout << "Unknown command" << std::endl;
-			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
 	}
 }

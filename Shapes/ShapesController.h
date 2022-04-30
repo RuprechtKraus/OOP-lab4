@@ -37,6 +37,7 @@ private:
 		ShowShapes,
 		ShowBiggestAreaShape,
 		ShowSmallestPerimeterShape,
+		Draw,
 		ShowHelp,
 		Exit
 	};
@@ -49,14 +50,15 @@ private:
 	HandlingResult CreateTriangle(std::istream& args);
 	HandlingResult CreateRectangle(std::istream& args);
 	HandlingResult CreateCircle(std::istream& args);
-	HandlingResult ShowBiggestArea(std::istream& args);
-	HandlingResult ShowSmallestPerimeter(std::istream& args);
-	HandlingResult ShowShapes(std::istream& args);
+	HandlingResult ShowBiggestArea(std::istream& args) const;
+	HandlingResult ShowSmallestPerimeter(std::istream& args) const;
+	HandlingResult ShowShapes(std::istream& args) const;
+	HandlingResult Draw(std::istream& args) const;
 	Handler GetActionHandler(Action action);
 
 	std::ostream& m_output;
 	std::istream& m_input;
-	std::vector<std::unique_ptr<IShape>> shapes{};
+	std::vector<std::unique_ptr<IShape>> m_shapes{};
 
 	const ActionMap m_actionMap = {
 		{ "line", Action::CreateLineSegment },
@@ -66,6 +68,7 @@ private:
 		{ "show", Action::ShowShapes },
 		{ "bigarea", Action::ShowBiggestAreaShape },
 		{ "smallperim", Action::ShowSmallestPerimeterShape },
+		{ "draw",  Action::Draw },
 		{ "help", Action::ShowHelp },
 		{ "exit", Action::Exit }
 	};

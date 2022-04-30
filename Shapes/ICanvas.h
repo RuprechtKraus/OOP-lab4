@@ -5,6 +5,7 @@
 
 class ICanvas
 {
+public:
 	virtual ~ICanvas() = default;
 
 	virtual void DrawLine(const Point& start, const Point& end, uint32_t color) = 0;

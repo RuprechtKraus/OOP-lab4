@@ -14,8 +14,8 @@ public:
 	uint32_t GetColor() const;
 	Point GetStartPoint() const;
 	Point GetEndPoint() const;
-	std::string ToString() const override;
 	void Draw(ICanvas& canvas) const override;
+	std::string ToString() const override;
 
 private:
 	Point m_start{};

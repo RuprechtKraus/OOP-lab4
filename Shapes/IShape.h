@@ -4,7 +4,7 @@
 #include <string>
 #include "ICanvasDrawable.h"
 
-class IShape : ICanvasDrawable
+class IShape : public ICanvasDrawable
 {
 public:
 	IShape(ShapeType type, std::optional<uint32_t> outlineColor);

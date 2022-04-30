@@ -61,6 +61,11 @@ Point Triangle::GetVertex3() const
 	return m_vertex3;
 }
 
+void Triangle::Draw(ICanvas& canvas) const
+{
+
+}
+
 std::string Triangle::ToString() const
 {
 	std::ostringstream ss;

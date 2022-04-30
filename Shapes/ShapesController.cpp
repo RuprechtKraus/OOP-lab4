@@ -1,5 +1,7 @@
 #include "ShapesController.h"
+#include "Canvas.h"
 #include "ShapeParamsCompare.h"
+#include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <optional>
 #include <sstream>
@@ -32,23 +34,25 @@ ShapesController::Handler ShapesController::GetActionHandler(Action action)
 {
 	switch (action)
 	{
-	case ShapesController::Action::CreateLineSegment:
+	case Action::CreateLineSegment:
 		return [this](std::istream& args) { return CreateLineSegment(args); };
-	case ShapesController::Action::CreateTriangle:
+	case Action::CreateTriangle:
 		return [this](std::istream& args) { return CreateTriangle(args); };
-	case ShapesController::Action::CreateRectangle:
+	case Action::CreateRectangle:
 		return [this](std::istream& args) { return CreateRectangle(args); };
-	case ShapesController::Action::CreateCircle:
+	case Action::CreateCircle:
 		return [this](std::istream& args) { return CreateCircle(args); };
-	case ShapesController::Action::ShowShapes:
+	case Action::ShowShapes:
 		return [this](std::istream& args) { return ShowShapes(args); };
-	case ShapesController::Action::ShowBiggestAreaShape:
+	case Action::ShowBiggestAreaShape:
 		return [this](std::istream& args) { return ShowBiggestArea(args); };
-	case ShapesController::Action::ShowSmallestPerimeterShape:
+	case Action::ShowSmallestPerimeterShape:
 		return [this](std::istream& args) { return ShowSmallestPerimeter(args); };
-	case ShapesController::Action::ShowHelp:
+	case Action::Draw:
+		return [this](std::istream& args) { return Draw(args); };
+	case Action::ShowHelp:
 		return [this](std::istream& args) { ShowHelp(); return HandlingResult::Success; };
-	case ShapesController::Action::Exit:
+	case Action::Exit:
 		return [this](std::istream& args) { return HandlingResult::Exit; };
 	default:
 		throw std::runtime_error("No handler for action");
@@ -83,7 +87,7 @@ HandlingResult ShapesController::CreateLineSegment(std::istream& args)
 		throw std::invalid_argument("LineSegment must have color");
 	}
 
-	shapes.emplace_back(new LineSegment({ x1, y1 }, { x2, y2 }, color.value()));
+	m_shapes.emplace_back(new LineSegment({ x1, y1 }, { x2, y2 }, color.value()));
 
 	return HandlingResult::Success;
 }
@@ -103,7 +107,7 @@ HandlingResult ShapesController::CreateTriangle(std::istream& args)
 	fillColor = StringToColorCode(fillColorStr);
 	outlineColor = StringToColorCode(outlineColorStr);
 
-	shapes.emplace_back(new Triangle({ x1, y1 }, { x2, y2 }, { x3, y3 }, fillColor, outlineColor));
+	m_shapes.emplace_back(new Triangle({ x1, y1 }, { x2, y2 }, { x3, y3 }, fillColor, outlineColor));
 
 	return HandlingResult::Success;
 }
@@ -122,7 +126,7 @@ HandlingResult ShapesController::CreateRectangle(std::istream& args)
 	fillColor = StringToColorCode(fillColorStr);
 	outlineColor = StringToColorCode(outlineColorStr);
 
-	shapes.emplace_back(new Rectangle({ x1, y1 }, { x2, y2 }, fillColor, outlineColor));
+	m_shapes.emplace_back(new Rectangle({ x1, y1 }, { x2, y2 }, fillColor, outlineColor));
 
 	return HandlingResult::Success;
 }
@@ -141,50 +145,79 @@ HandlingResult ShapesController::CreateCircle(std::istream& args)
 	fillColor = StringToColorCode(fillColorStr);
 	outlineColor = StringToColorCode(outlineColorStr);
 
-	shapes.emplace_back(new Circle({ x, y }, radius, fillColor, outlineColor));
+	m_shapes.emplace_back(new Circle({ x, y }, radius, fillColor, outlineColor));
 
 	return HandlingResult::Success;
 }
 
-HandlingResult ShapesController::ShowBiggestArea(std::istream&)
+HandlingResult ShapesController::ShowBiggestArea(std::istream&) const
 {
-	if (shapes.empty())
+	if (m_shapes.empty())
 	{
 		m_output << "No shapes" << std::endl;
 		return HandlingResult::Success;
 	}
 
-	auto it = std::max_element(shapes.cbegin(), shapes.cend(), AreaCompare);
+	auto it = std::max_element(m_shapes.cbegin(), m_shapes.cend(), AreaCompare);
 	m_output << it->get()->ToString();
 
 	return HandlingResult::Success;
 }
 
-HandlingResult ShapesController::ShowSmallestPerimeter(std::istream&)
+HandlingResult ShapesController::ShowSmallestPerimeter(std::istream&) const
 {
-	if (shapes.empty())
+	if (m_shapes.empty())
 	{
 		m_output << "No shapes" << std::endl;
 		return HandlingResult::Success;
 	}
 
-	auto it = std::min_element(shapes.cbegin(), shapes.cend(), PerimeterCompare);
+	auto it = std::min_element(m_shapes.cbegin(), m_shapes.cend(), PerimeterCompare);
 	m_output << it->get()->ToString();
 
 	return HandlingResult::Success;
 }
 
-HandlingResult ShapesController::ShowShapes(std::istream&)
+HandlingResult ShapesController::ShowShapes(std::istream&) const
 {
-	if (shapes.empty())
+	if (m_shapes.empty())
 	{
 		m_output << "No shapes" << std::endl;
 		return HandlingResult::Success;
 	}
 
-	for (const auto& shape : shapes)
+	for (const auto& shape : m_shapes)
 	{
 		m_output << shape->ToString() << '\n';
+	}
+
+	return HandlingResult::Success;
+}
+
+HandlingResult ShapesController::Draw(std::istream&) const
+{
+	sf::RenderWindow window(sf::VideoMode(1280, 720), "Shapes", sf::Style::Close);
+	sf::Event event{};
+	Canvas canvas(window);
+
+	while (window.isOpen())
+	{
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				window.close();
+			}
+		}
+
+		window.clear(sf::Color(255, 255, 255));
+
+		for (const auto& shape : m_shapes)
+		{
+			shape->Draw(canvas);
+		}
+
+		window.display();
 	}
 
 	return HandlingResult::Success;
@@ -199,6 +232,7 @@ void ShapesController::ShowHelp()
 			 << "\nShow shapes: show"
 			 << "\nShow shape with biggest area: bigarea"
 			 << "\nShow shape with smaller perimeter: smallperim"
+			 << "\nDraw shapes: draw"
 			 << "\nShow help: help"
 			 << "\nExit program: exit"
 			 << std::endl;
