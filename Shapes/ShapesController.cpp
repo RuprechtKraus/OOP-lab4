@@ -3,28 +3,30 @@
 #include "ShapeParamsCompare.h"
 #include <SFML/Graphics.hpp>
 #include <algorithm>
+#include <fstream>
 #include <optional>
 #include <sstream>
 
 static void ToLowerString(std::string& str);
 static std::optional<uint32_t> StringToColorCode(const std::string& str);
+static bool IsStringEmpty(const std::string& str);
 
 ShapesController::ShapesController(std::istream& input, std::ostream& output)
-	: m_input(input)
-	, m_output(output)
+	: m_input(&input)
+	, m_output(&output)
 {
 }
 
 HandlingResult ShapesController::HandleCommand()
 {
 	std::string action{};
-	m_input >> action;
+	*m_input >> action;
 	ToLowerString(action);
 
 	auto it = m_actionMap.find(action);
 	if (it != m_actionMap.cend())
 	{
-		return ExecuteHandlingExceptions(GetActionHandler(it->second), m_input);
+		return ExecuteHandlingExceptions(GetActionHandler(it->second), *m_input);
 	}
 
 	return HandlingResult::UnknownCommand;
@@ -42,6 +44,8 @@ ShapesController::Handler ShapesController::GetActionHandler(Action action)
 		return [this](std::istream& args) { return CreateRectangle(args); };
 	case Action::CreateCircle:
 		return [this](std::istream& args) { return CreateCircle(args); };
+	case Action::LoadFile:
+		return [this](std::istream& args) { return LoadFile(args); };
 	case Action::ShowShapes:
 		return [this](std::istream& args) { return ShowShapes(args); };
 	case Action::ShowBiggestAreaShape:
@@ -50,6 +54,8 @@ ShapesController::Handler ShapesController::GetActionHandler(Action action)
 		return [this](std::istream& args) { return ShowSmallestPerimeter(args); };
 	case Action::Draw:
 		return [this](std::istream& args) { return Draw(args); };
+	case Action::Clear:
+		return [this](std::istream& args) { return Clear(args); };
 	case Action::ShowHelp:
 		return [this](std::istream& args) { ShowHelp(); return HandlingResult::Success; };
 	case Action::Exit:
@@ -67,7 +73,7 @@ HandlingResult ShapesController::ExecuteHandlingExceptions(Handler handler, std:
 	}
 	catch (const std::exception& e)
 	{
-		m_output << e.what() << std::endl;
+		*m_output << e.what() << std::endl;
 		return HandlingResult::Fail;
 	}
 }
@@ -150,16 +156,50 @@ HandlingResult ShapesController::CreateCircle(std::istream& args)
 	return HandlingResult::Success;
 }
 
+HandlingResult ShapesController::LoadFile(std::istream& args)
+{
+	std::string fileName{};
+	args >> fileName;
+	std::ifstream file(fileName);
+
+	if (!file.is_open())
+	{
+		throw std::runtime_error("Unable to open file");
+	}
+
+	std::istream* oldStream = m_input;
+	ReadShapesFile(file);
+	m_input = oldStream;
+
+	*m_output << "File has been loaded" << std::endl;
+
+	return HandlingResult::Success;
+}
+
+void ShapesController::ReadShapesFile(std::ifstream& file)
+{
+	std::string line{};
+	while (std::getline(file, line))
+	{
+		if (!IsStringEmpty(line))
+		{
+			std::istringstream ss(line);
+			m_input = &ss;
+			HandleCommand();
+		}
+	}
+}
+
 HandlingResult ShapesController::ShowBiggestArea(std::istream&) const
 {
 	if (m_shapes.empty())
 	{
-		m_output << "No shapes" << std::endl;
+		*m_output << "No shapes" << std::endl;
 		return HandlingResult::Success;
 	}
 
 	auto it = std::max_element(m_shapes.cbegin(), m_shapes.cend(), AreaCompare);
-	m_output << it->get()->ToString();
+	*m_output << it->get()->ToString();
 
 	return HandlingResult::Success;
 }
@@ -168,12 +208,12 @@ HandlingResult ShapesController::ShowSmallestPerimeter(std::istream&) const
 {
 	if (m_shapes.empty())
 	{
-		m_output << "No shapes" << std::endl;
+		*m_output << "No shapes" << std::endl;
 		return HandlingResult::Success;
 	}
 
 	auto it = std::min_element(m_shapes.cbegin(), m_shapes.cend(), PerimeterCompare);
-	m_output << it->get()->ToString();
+	*m_output << it->get()->ToString();
 
 	return HandlingResult::Success;
 }
@@ -182,13 +222,13 @@ HandlingResult ShapesController::ShowShapes(std::istream&) const
 {
 	if (m_shapes.empty())
 	{
-		m_output << "No shapes" << std::endl;
+		*m_output << "No shapes" << std::endl;
 		return HandlingResult::Success;
 	}
 
 	for (const auto& shape : m_shapes)
 	{
-		m_output << shape->ToString() << '\n';
+		*m_output << shape->ToString() << '\n';
 	}
 
 	return HandlingResult::Success;
@@ -223,19 +263,28 @@ HandlingResult ShapesController::Draw(std::istream&) const
 	return HandlingResult::Success;
 }
 
+HandlingResult ShapesController::Clear(std::istream&)
+{
+	m_shapes.clear();
+	*m_output << "All shapes have been deleted" << std::endl;
+	return HandlingResult::Success;
+}
+
 void ShapesController::ShowHelp()
 {
-	m_output << "Add line: line <x1> <y1> <x2> <y2> <color>"
-			 << "\nAdd triangle: triangle <x1> <y1> <x2> <y2> <x3> <y3> <fill_color|No> <outline_color|No>"
-			 << "\nAdd rectangle: rectangle <x1> <y1> <x2> <y2> <fill_color|No> <outline_color|No>"
-			 << "\nAdd circle: circle <x> <y> <radius> <fill_color|No> <outline_color|No>"
-			 << "\nShow shapes: show"
-			 << "\nShow shape with biggest area: bigarea"
-			 << "\nShow shape with smaller perimeter: smallperim"
-			 << "\nDraw shapes: draw"
-			 << "\nShow help: help"
-			 << "\nExit program: exit"
-			 << std::endl;
+	*m_output << "Add line: line <x1> <y1> <x2> <y2> <color>"
+			  << "\nAdd triangle: triangle <x1> <y1> <x2> <y2> <x3> <y3> <fill_color|No> <outline_color|No>"
+			  << "\nAdd rectangle: rectangle <x1> <y1> <x2> <y2> <fill_color|No> <outline_color|No>"
+			  << "\nAdd circle: circle <x> <y> <radius> <fill_color|No> <outline_color|No>"
+			  << "\nLoad shapes from file: loadfile <file_name>"
+			  << "\nShow shapes: show"
+			  << "\nShow shape with biggest area: bigarea"
+			  << "\nShow shape with smaller perimeter: smallperim"
+			  << "\nDraw shapes: draw"
+			  << "\nClear shape list: clear"
+			  << "\nShow help: help"
+			  << "\nExit program: exit"
+			  << std::endl;
 }
 
 void ToLowerString(std::string& str)
@@ -261,4 +310,9 @@ std::optional<uint32_t> StringToColorCode(const std::string& str)
 	{
 		throw std::invalid_argument("Wrong color");
 	}
+}
+
+static bool IsStringEmpty(const std::string& str)
+{
+	return str.empty() || std::all_of(str.cbegin(), str.cend(), [](char c) { return c == ' '; });
 }

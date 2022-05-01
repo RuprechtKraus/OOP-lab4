@@ -45,7 +45,7 @@ void Canvas::DrawPolygon(const std::vector<Point>& points,
 void Canvas::DrawCircle(const Point& center, double radius,
 	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
 {
-	sf::CircleShape circle(radius);
+	sf::CircleShape circle(static_cast<float>(radius));
 
 	circle.move(static_cast<float>(center.x), static_cast<float>(center.y));
 	circle.setOutlineThickness(1);

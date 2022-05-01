@@ -3,7 +3,9 @@
 #include "CppUnitTest.h"
 #include "LineSegment.h"
 #include "Rectangle.h"
+#include "ShapesController.h"
 #include "Triangle.h"
+#include <sstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -12,6 +14,26 @@ double RoundNumber(double value, int decimalPlaces)
 	const double multiplier = std::pow(10.0, decimalPlaces);
 	return std::round(value * multiplier) / multiplier;
 }
+
+struct ShapesControllerDependencies
+{
+	std::ostringstream output;
+	std::istringstream input;
+};
+
+class ShapesControllerTest : public ShapesControllerDependencies
+{
+public:
+	ShapesControllerTest()
+		: m_controller(input, output){};
+
+	void VerifyCommandHandling()
+	{
+	}
+
+private:
+	ShapesController m_controller;
+};
 
 namespace ShapesTest
 {

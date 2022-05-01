@@ -34,10 +34,12 @@ private:
 		CreateTriangle,
 		CreateRectangle,
 		CreateCircle,
+		LoadFile,
 		ShowShapes,
 		ShowBiggestAreaShape,
 		ShowSmallestPerimeterShape,
 		Draw,
+		Clear,
 		ShowHelp,
 		Exit
 	};
@@ -50,14 +52,17 @@ private:
 	HandlingResult CreateTriangle(std::istream& args);
 	HandlingResult CreateRectangle(std::istream& args);
 	HandlingResult CreateCircle(std::istream& args);
+	HandlingResult LoadFile(std::istream& args);
 	HandlingResult ShowBiggestArea(std::istream& args) const;
 	HandlingResult ShowSmallestPerimeter(std::istream& args) const;
 	HandlingResult ShowShapes(std::istream& args) const;
 	HandlingResult Draw(std::istream& args) const;
+	HandlingResult Clear(std::istream& args);
 	Handler GetActionHandler(Action action);
+	void ReadShapesFile(std::ifstream& file);
 
-	std::ostream& m_output;
-	std::istream& m_input;
+	std::ostream* m_output;
+	std::istream* m_input;
 	std::vector<std::unique_ptr<IShape>> m_shapes{};
 
 	const ActionMap m_actionMap = {
@@ -65,10 +70,12 @@ private:
 		{ "triangle", Action::CreateTriangle },
 		{ "rectangle", Action::CreateRectangle },
 		{ "circle", Action::CreateCircle },
+		{ "loadfile", Action::LoadFile },
 		{ "show", Action::ShowShapes },
 		{ "bigarea", Action::ShowBiggestAreaShape },
 		{ "smallperim", Action::ShowSmallestPerimeterShape },
 		{ "draw",  Action::Draw },
+		{ "clear", Action::Clear },
 		{ "help", Action::ShowHelp },
 		{ "exit", Action::Exit }
 	};
