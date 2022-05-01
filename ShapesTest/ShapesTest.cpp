@@ -24,10 +24,16 @@ namespace ShapesTest
 				L"Length is incorrect");
 		}
 
+		TEST_METHOD(HasZeroArea)
+		{
+			LineSegment line({ 0.0, 0.0 }, { 5.0, 5.0 });
+			Assert::AreEqual(0.0, line.GetArea(), L"Line has a perimeter");
+		}
+
 		TEST_METHOD(HasZeroPerimeter)
 		{
 			LineSegment line({ 0.0, 0.0 }, { 5.0, 5.0 });
-			Assert::AreEqual(0.0, line.GetPerimeter(), L"Line has a perimeter");
+			Assert::AreEqual(7.07, RoundNumber(line.GetPerimeter(), 2), L"Line has a perimeter");
 		}
 
 		TEST_METHOD(HasStartAndEndPoints)
@@ -144,83 +150,83 @@ Edge C length: 4.5
 
 		TEST_METHOD(CantCreateWithBottomRightBeingAboveOfTopLeft)
 		{
-			auto rectangleCreate = []() { Rectangle rectangle({ 10.0, 10.0 }, { 15.0, 20.0 }); };
+			auto rectangleCreate = []() { Rectangle rectangle({ 10.0, 10.0 }, { 15.0, 5.0 }); };
 			Assert::ExpectException<std::invalid_argument>(rectangleCreate, L"Bottom right is above of top left");
 		}
 
 		TEST_METHOD(HasArea)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 15.0 });
 			Assert::AreEqual(50.0, rectangle.GetArea(), L"Area is incorrect");
 		}
 
 		TEST_METHOD(HasPerimeter)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 15.0 });
 			Assert::AreEqual(30.0, rectangle.GetPerimeter(), L"Perimeter is incorrect");
 		}
 
 		TEST_METHOD(HasWidth)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 15.0 });
 			Assert::AreEqual(10.0, rectangle.GetWidth(), L"Width is incorrect");
 		}
 
 		TEST_METHOD(HasHeight)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 15.0 });
 			Assert::AreEqual(5.0, rectangle.GetHeight(), L"Height is incorrect");
 		}
 
 		TEST_METHOD(HasTopLeft)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 15.0 });
 			Point topLeft = rectangle.GetTopLeft();
 			Assert::IsTrue(topLeft.x == 10.0 && topLeft.y == 10.0, L"Top left corner is incorrect");
 		}
 
 		TEST_METHOD(HasBottomRight)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 15.0 });
 			Point bottomRight = rectangle.GetBottomRight();
-			Assert::IsTrue(bottomRight.x == 20.0 && bottomRight.y == 5.0, L"Top left corner is incorrect");
+			Assert::IsTrue(bottomRight.x == 20.0 && bottomRight.y == 15.0, L"Top left corner is incorrect");
 		}
 
 		TEST_METHOD(HasWhiteFillColorByDefault)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 });
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 15.0 });
 			Assert::AreEqual(0xFFFFFFU, rectangle.GetFillColor().value(), L"Fill color is not black");
 		}
 
 		TEST_METHOD(HasGreenFillColor)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 }, 0x00FF00U);
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 15.0 }, 0x00FF00U);
 			Assert::AreEqual(0x00FF00U, rectangle.GetFillColor().value(), L"Fill color is not green");
 		}
 
 		TEST_METHOD(HasNoOutline)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 }, 0x00FF00U);
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 115.0 }, 0x00FF00U);
 			Assert::IsFalse(rectangle.GetOutlineColor().has_value(), L"Has outline");
 		}
 
 		TEST_METHOD(HasBlueOutlineColor)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 }, 0x00FF00U, 0x0000FFU);
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 15.0 }, 0x00FF00U, 0x0000FFU);
 			Assert::IsTrue(rectangle.GetOutlineColor().has_value(), L"No outline");
 			Assert::AreEqual(0x0000FFU, rectangle.GetOutlineColor().value(), L"Outline color is not blue");
 		}
 
 		TEST_METHOD(CanBeConvertedToString)
 		{
-			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 5.0 }, 0x00FF00U, 0x0000FFU);
+			Rectangle rectangle({ 10.0, 10.0 }, { 20.0, 15.0 }, 0x00FF00U, 0x0000FFU);
 			std::string expectedString{ R"(Type: Rectangle
 Area: 50.0
 Perimeter: 30.0
 Fill color: 0XFF00
 Outline color: 0XFF
 Top left: 10.0, 10.0
-Bottom right: 20.0, 5.0
+Bottom right: 20.0, 15.0
 Width: 10.0
 Height: 5.0
 )" };
