@@ -12,21 +12,21 @@ static std::optional<uint32_t> StringToColorCode(const std::string& str);
 static bool IsStringEmpty(const std::string& str);
 
 ShapesController::ShapesController(std::istream& input, std::ostream& output)
-	: m_input(&input)
-	, m_output(&output)
+	: m_input(input)
+	, m_output(output)
 {
 }
 
 HandlingResult ShapesController::HandleCommand()
 {
 	std::string action{};
-	*m_input >> action;
+	m_input >> action;
 	ToLowerString(action);
 
 	auto it = m_actionMap.find(action);
 	if (it != m_actionMap.cend())
 	{
-		return ExecuteHandlingExceptions(GetActionHandler(it->second), *m_input);
+		return ExecuteHandlingExceptions(GetActionHandler(it->second), m_input);
 	}
 
 	return HandlingResult::UnknownCommand;
@@ -75,7 +75,7 @@ HandlingResult ShapesController::ExecuteHandlingExceptions(Handler handler, std:
 	}
 	catch (const std::exception& e)
 	{
-		*m_output << e.what() << std::endl;
+		m_output << e.what() << std::endl;
 		return HandlingResult::Fail;
 	}
 }
@@ -169,18 +169,56 @@ HandlingResult ShapesController::LoadFile(std::istream& args)
 		throw std::runtime_error("Unable to open file");
 	}
 
-	std::istream* oldStream = m_input;
 	ReadShapesFile(file);
-	m_input = oldStream;
 
-	*m_output << "File has been loaded" << std::endl;
+	m_output << "File has been loaded" << std::endl;
 
 	return HandlingResult::Success;
 }
 
+void ShapesController::ReadShapesFile(std::ifstream& file)
+{
+	std::string line{};
+	std::string shape{};
+
+	while (std::getline(file, line))
+	{
+		if (!IsStringEmpty(line))
+		{
+			std::istringstream ss(line);
+			ss >> shape;
+			CreateShape(shape, ss);
+		}
+	}
+}
+
+void ShapesController::CreateShape(const std::string& shape, std::istringstream& args)
+{
+	if (shape == "line")
+	{
+		CreateLineSegment(args);
+	} 
+	else if (shape == "triangle")
+	{
+		CreateTriangle(args);
+	}
+	else if (shape == "rectangle")
+	{
+		CreateRectangle(args);
+	}
+	else if (shape == "circle")
+	{
+		CreateCircle(args);
+	}
+	else
+	{
+		throw std::invalid_argument("Unknown shape '" + shape + "'");
+	}
+}
+
 HandlingResult ShapesController::ShowShapesCount(std::istream&) const
 {
-	*m_output << m_shapes.size() << std::endl;
+	m_output << m_shapes.size() << std::endl;
 	return HandlingResult::Success;
 }
 
@@ -188,13 +226,13 @@ HandlingResult ShapesController::ShowShapes(std::istream&) const
 {
 	if (m_shapes.empty())
 	{
-		*m_output << "No shapes" << std::endl;
+		m_output << "No shapes" << std::endl;
 		return HandlingResult::Success;
 	}
 
 	for (const auto& shape : m_shapes)
 	{
-		*m_output << shape->ToString() << '\n';
+		m_output << shape->ToString() << '\n';
 	}
 
 	return HandlingResult::Success;
@@ -204,12 +242,12 @@ HandlingResult ShapesController::ShowBiggestArea(std::istream&) const
 {
 	if (m_shapes.empty())
 	{
-		*m_output << "No shapes" << std::endl;
+		m_output << "No shapes" << std::endl;
 		return HandlingResult::Success;
 	}
 
 	auto it = std::max_element(m_shapes.cbegin(), m_shapes.cend(), AreaCompare);
-	*m_output << it->get()->ToString();
+	m_output << it->get()->ToString();
 
 	return HandlingResult::Success;
 }
@@ -218,12 +256,12 @@ HandlingResult ShapesController::ShowSmallestPerimeter(std::istream&) const
 {
 	if (m_shapes.empty())
 	{
-		*m_output << "No shapes" << std::endl;
+		m_output << "No shapes" << std::endl;
 		return HandlingResult::Success;
 	}
 
 	auto it = std::min_element(m_shapes.cbegin(), m_shapes.cend(), PerimeterCompare);
-	*m_output << it->get()->ToString();
+	m_output << it->get()->ToString();
 
 	return HandlingResult::Success;
 }
@@ -260,13 +298,13 @@ HandlingResult ShapesController::Draw(std::istream&) const
 HandlingResult ShapesController::Clear(std::istream&)
 {
 	m_shapes.clear();
-	*m_output << "All shapes have been deleted" << std::endl;
+	m_output << "All shapes have been deleted" << std::endl;
 	return HandlingResult::Success;
 }
 
 void ShapesController::ShowHelp()
 {
-	*m_output << "Add line: line <x1> <y1> <x2> <y2> <color>"
+	m_output << "Add line: line <x1> <y1> <x2> <y2> <color>"
 			  << "\nAdd triangle: triangle <x1> <y1> <x2> <y2> <x3> <y3> <fill_color|No> <outline_color|No>"
 			  << "\nAdd rectangle: rectangle <x1> <y1> <x2> <y2> <fill_color|No> <outline_color|No>"
 			  << "\nAdd circle: circle <x> <y> <radius> <fill_color|No> <outline_color|No>"
@@ -280,20 +318,6 @@ void ShapesController::ShowHelp()
 			  << "\nShow help: help"
 			  << "\nExit program: exit"
 			  << std::endl;
-}
-
-void ShapesController::ReadShapesFile(std::ifstream& file)
-{
-	std::string line{};
-	while (std::getline(file, line))
-	{
-		if (!IsStringEmpty(line))
-		{
-			std::istringstream ss(line);
-			m_input = &ss;
-			HandleCommand();
-		}
-	}
 }
 
 void ToLowerString(std::string& str)

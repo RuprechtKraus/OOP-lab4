@@ -62,9 +62,10 @@ private:
 	HandlingResult Clear(std::istream& args);
 	Handler GetActionHandler(Action action);
 	void ReadShapesFile(std::ifstream& file);
+	void CreateShape(const std::string& shape, std::istringstream& args);
 
-	std::ostream* m_output;
-	std::istream* m_input;
+	std::ostream& m_output;
+	std::istream& m_input;
 	std::vector<std::unique_ptr<IShape>> m_shapes{};
 
 	const ActionMap m_actionMap = {
