@@ -46,6 +46,8 @@ ShapesController::Handler ShapesController::GetActionHandler(Action action)
 		return [this](std::istream& args) { return CreateCircle(args); };
 	case Action::LoadFile:
 		return [this](std::istream& args) { return LoadFile(args); };
+	case Action::ShowCount:
+		return [this](std::istream& args) { return ShowShapesCount(args); };
 	case Action::ShowShapes:
 		return [this](std::istream& args) { return ShowShapes(args); };
 	case Action::ShowBiggestAreaShape:
@@ -176,18 +178,26 @@ HandlingResult ShapesController::LoadFile(std::istream& args)
 	return HandlingResult::Success;
 }
 
-void ShapesController::ReadShapesFile(std::ifstream& file)
+HandlingResult ShapesController::ShowShapesCount(std::istream&) const
 {
-	std::string line{};
-	while (std::getline(file, line))
+	*m_output << m_shapes.size() << std::endl;
+	return HandlingResult::Success;
+}
+
+HandlingResult ShapesController::ShowShapes(std::istream&) const
+{
+	if (m_shapes.empty())
 	{
-		if (!IsStringEmpty(line))
-		{
-			std::istringstream ss(line);
-			m_input = &ss;
-			HandleCommand();
-		}
+		*m_output << "No shapes" << std::endl;
+		return HandlingResult::Success;
 	}
+
+	for (const auto& shape : m_shapes)
+	{
+		*m_output << shape->ToString() << '\n';
+	}
+
+	return HandlingResult::Success;
 }
 
 HandlingResult ShapesController::ShowBiggestArea(std::istream&) const
@@ -214,22 +224,6 @@ HandlingResult ShapesController::ShowSmallestPerimeter(std::istream&) const
 
 	auto it = std::min_element(m_shapes.cbegin(), m_shapes.cend(), PerimeterCompare);
 	*m_output << it->get()->ToString();
-
-	return HandlingResult::Success;
-}
-
-HandlingResult ShapesController::ShowShapes(std::istream&) const
-{
-	if (m_shapes.empty())
-	{
-		*m_output << "No shapes" << std::endl;
-		return HandlingResult::Success;
-	}
-
-	for (const auto& shape : m_shapes)
-	{
-		*m_output << shape->ToString() << '\n';
-	}
 
 	return HandlingResult::Success;
 }
@@ -277,6 +271,7 @@ void ShapesController::ShowHelp()
 			  << "\nAdd rectangle: rectangle <x1> <y1> <x2> <y2> <fill_color|No> <outline_color|No>"
 			  << "\nAdd circle: circle <x> <y> <radius> <fill_color|No> <outline_color|No>"
 			  << "\nLoad shapes from file: loadfile <file_name>"
+			  << "\nShow shapes count: count"
 			  << "\nShow shapes: show"
 			  << "\nShow shape with biggest area: bigarea"
 			  << "\nShow shape with smaller perimeter: smallperim"
@@ -285,6 +280,20 @@ void ShapesController::ShowHelp()
 			  << "\nShow help: help"
 			  << "\nExit program: exit"
 			  << std::endl;
+}
+
+void ShapesController::ReadShapesFile(std::ifstream& file)
+{
+	std::string line{};
+	while (std::getline(file, line))
+	{
+		if (!IsStringEmpty(line))
+		{
+			std::istringstream ss(line);
+			m_input = &ss;
+			HandleCommand();
+		}
+	}
 }
 
 void ToLowerString(std::string& str)

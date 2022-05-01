@@ -17,18 +17,26 @@ double RoundNumber(double value, int decimalPlaces)
 
 struct ShapesControllerDependencies
 {
-	std::ostringstream output;
-	std::istringstream input;
+	std::stringstream output;
+	std::stringstream input;
 };
 
-class ShapesControllerTest : public ShapesControllerDependencies
+class ShapesTestController : public ShapesControllerDependencies
 {
 public:
-	ShapesControllerTest()
+	ShapesTestController()
 		: m_controller(input, output){};
 
-	void VerifyCommandHandling()
+	void VerifyCommandHandling(const std::string& command,
+		const std::string& expectedOutput,
+		HandlingResult expectedHandlingResult)
 	{
+		input = std::stringstream();
+		output = std::stringstream();
+		input << command;
+
+		Assert::IsTrue(m_controller.HandleCommand() == expectedHandlingResult, L"Handling result doesn't match expected");
+		Assert::AreEqual(expectedOutput, output.str(), L"Actual output doesn't match expected");
 	}
 
 private:
@@ -326,6 +334,121 @@ Center: 20.0, 25.0
 Radius: 10.0
 )" };
 			Assert::AreEqual(expectedString, circle.ToString(), L"Convertation to string failed");
+		}
+	};
+
+	TEST_CLASS(ShapeControllerTest)
+	{
+		TEST_METHOD(CanHandleCreateLineSegmentCommand)
+		{
+			ShapesTestController controller;
+			std::string expectedShowCommandOutput{ R"(Type: LineSegment
+Color: 0XFF0000
+Start: 0.0, 0.0
+End: 5.5, 5.5
+Length: 7.8
+
+)" };
+
+			controller.VerifyCommandHandling("line 0 0 5.5 5.5 ff0000", "", HandlingResult::Success);
+			controller.VerifyCommandHandling("count", "1\n", HandlingResult::Success);
+			controller.VerifyCommandHandling("show", expectedShowCommandOutput, HandlingResult::Success);
+		}
+
+		TEST_METHOD(CanHandleCreateTriangleCommand)
+		{
+			ShapesTestController controller;
+			std::string expectedShowCommandOutput{ R"(Type: Triangle
+Area: 8.0
+Perimeter: 12.9
+Fill color: 0XFF00
+Outline color: 0XFF
+Vertex 1: 0.0, 0.0
+Vertex 2: 2.0, 4.0
+Vertex 3: 4.0, 0.0
+Edge A length: 4.5
+Edge B length: 4.0
+Edge C length: 4.5
+
+)" };
+
+			controller.VerifyCommandHandling("triangle 0 0 2 4 4 0 00ff00 0000ff", "", HandlingResult::Success);
+			controller.VerifyCommandHandling("count", "1\n", HandlingResult::Success);
+			controller.VerifyCommandHandling("show", expectedShowCommandOutput, HandlingResult::Success);
+		}
+
+		TEST_METHOD(CanHandleCreateRectangleCommand)
+		{
+			ShapesTestController controller;
+			std::string expectedShowCommandOutput{ R"(Type: Rectangle
+Area: 50.0
+Perimeter: 30.0
+Fill color: 0XFF00
+Outline color: 0XFF
+Top left: 10.0, 10.0
+Bottom right: 20.0, 15.0
+Width: 10.0
+Height: 5.0
+
+)" };
+
+			controller.VerifyCommandHandling("rectangle 10 10 20 15 00ff00 0000ff", "", HandlingResult::Success);
+			controller.VerifyCommandHandling("count", "1\n", HandlingResult::Success);
+			controller.VerifyCommandHandling("show", expectedShowCommandOutput, HandlingResult::Success);
+		}
+
+		TEST_METHOD(CanHandleCreateCircleCommand)
+		{
+			ShapesTestController controller;
+			std::string expectedShowCommandOutput{ R"(Type: Circle
+Area: 314.2
+Perimeter: 62.8
+Fill color: 0XFF00
+Outline color: 0XFF
+Center: 20.0, 25.0
+Radius: 10.0
+
+)" };
+
+			controller.VerifyCommandHandling("circle 20 25 10 00ff00 0000ff", "", HandlingResult::Success);
+			controller.VerifyCommandHandling("count", "1\n", HandlingResult::Success);
+			controller.VerifyCommandHandling("show", expectedShowCommandOutput, HandlingResult::Success);
+		}
+
+		TEST_METHOD(CanHandleShowBiggestAreaCommand)
+		{
+			ShapesTestController controller;
+			std::string expectedBiggestAreaCommandOutput{ R"(Type: Circle
+Area: 314.2
+Perimeter: 62.8
+Fill color: 0XFF00
+Outline color: 0XFF
+Center: 20.0, 25.0
+Radius: 10.0
+)" };
+
+			controller.VerifyCommandHandling("rectangle 10 10 20 15 00ff00 0000ff", "", HandlingResult::Success);
+			controller.VerifyCommandHandling("circle 20 25 10 00ff00 0000ff", "", HandlingResult::Success);
+			controller.VerifyCommandHandling("bigarea", expectedBiggestAreaCommandOutput, HandlingResult::Success);
+		}
+
+		TEST_METHOD(CanHandleShowSmallestPerimeterCommand)
+		{
+			ShapesTestController controller;
+			std::string expectedBiggestAreaCommandOutput{ R"(Type: Rectangle
+Area: 50.0
+Perimeter: 30.0
+Fill color: 0XFF00
+Outline color: 0XFF
+Top left: 10.0, 10.0
+Bottom right: 20.0, 15.0
+Width: 10.0
+Height: 5.0
+)" };
+
+			controller.VerifyCommandHandling("rectangle 10 10 20 15 00ff00 0000ff", "", HandlingResult::Success);
+			controller.VerifyCommandHandling("circle 20 25 10 00ff00 0000ff", "", HandlingResult::Success);
+			controller.VerifyCommandHandling("smallperim", expectedBiggestAreaCommandOutput, HandlingResult::Success);
 		}
 	};
 }
