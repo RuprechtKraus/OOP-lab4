@@ -3,7 +3,7 @@
 #include <optional>
 #include <SFML/Graphics.hpp>
 
-class Canvas final : public ICanvas
+class Canvas : public ICanvas
 {
 public:
 	Canvas(sf::RenderWindow& window);

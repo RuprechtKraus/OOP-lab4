@@ -167,6 +167,7 @@
     <ClCompile Include="ShapesTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="fakeit.hpp" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>

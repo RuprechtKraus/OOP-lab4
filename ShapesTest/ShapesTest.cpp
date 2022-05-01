@@ -1,13 +1,16 @@
 ﻿#include "pch.h"
 #include "Circle.h"
+#include "Canvas.h"
 #include "CppUnitTest.h"
 #include "LineSegment.h"
 #include "Rectangle.h"
 #include "ShapesController.h"
 #include "Triangle.h"
 #include <sstream>
+#include "fakeit.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+using namespace fakeit;
 
 double RoundNumber(double value, int decimalPlaces)
 {
@@ -449,6 +452,57 @@ Height: 5.0
 			controller.VerifyCommandHandling("rectangle 10 10 20 15 00ff00 0000ff", "", HandlingResult::Success);
 			controller.VerifyCommandHandling("circle 20 25 10 00ff00 0000ff", "", HandlingResult::Success);
 			controller.VerifyCommandHandling("smallperim", expectedBiggestAreaCommandOutput, HandlingResult::Success);
+		}
+	};
+
+	TEST_CLASS(CanvasDrawTest)
+	{
+		TEST_METHOD(DrawLineSegmentTest)
+		{
+			Mock<Canvas> mock;
+			Fake(Method(mock, DrawLine));
+
+			Canvas& canvas = mock.get();
+			canvas.DrawLine({ 0, 0 }, { 5, 5 }, 0x000000U);
+
+			Verify(Method(mock, DrawLine));
+			VerifyNoOtherInvocations(mock);
+		}
+
+		TEST_METHOD(DrawTriangleTest)
+		{
+			Mock<Canvas> mock;
+			Fake(Method(mock, DrawPolygon));
+
+			Canvas& canvas = mock.get();
+			canvas.DrawPolygon(std::vector<Point>{ { 0.0, 0.0 }, { 2.0, 4.0 }, { 4.0, 0.0 } }, 0x000000U, 0x000000U);
+
+			Verify(Method(mock, DrawPolygon));
+			VerifyNoOtherInvocations(mock);
+		}
+
+		TEST_METHOD(DrawRectangleTest)
+		{
+			Mock<Canvas> mock;
+			Fake(Method(mock, DrawPolygon));
+
+			Canvas& canvas = mock.get();
+			canvas.DrawPolygon(std::vector<Point>{ { 10.0, 10.0 }, { 20.0, 15.0 } }, 0x000000U, 0x000000U);
+
+			Verify(Method(mock, DrawPolygon));
+			VerifyNoOtherInvocations(mock);
+		}
+
+		TEST_METHOD(DrawCircleTest)
+		{
+			Mock<Canvas> mock;
+			Fake(Method(mock, DrawCircle));
+
+			Canvas& canvas = mock.get();
+			canvas.DrawCircle({ 20.0, 25.0 }, 10.0, 0x000000U, 0x000000U);
+
+			Verify(Method(mock, DrawCircle));
+			VerifyNoOtherInvocations(mock);
 		}
 	};
 }
