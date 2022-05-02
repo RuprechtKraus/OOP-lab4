@@ -56,6 +56,8 @@ ShapesController::Handler ShapesController::GetActionHandler(Action action)
 		return [this](std::istream& args) { return ShowSmallestPerimeter(args); };
 	case Action::Draw:
 		return [this](std::istream& args) { return Draw(args); };
+	case Action::DrawFile:
+		return [this](std::istream& args) { return DrawFromFile(args); };
 	case Action::Clear:
 		return [this](std::istream& args) { return Clear(args); };
 	case Action::ShowHelp:
@@ -171,8 +173,6 @@ HandlingResult ShapesController::LoadFile(std::istream& args)
 
 	ReadShapesFile(file);
 
-	m_output << "File has been loaded" << std::endl;
-
 	return HandlingResult::Success;
 }
 
@@ -197,7 +197,7 @@ void ShapesController::CreateShape(const std::string& shape, std::istringstream&
 	if (shape == "line")
 	{
 		CreateLineSegment(args);
-	} 
+	}
 	else if (shape == "triangle")
 	{
 		CreateTriangle(args);
@@ -295,29 +295,37 @@ HandlingResult ShapesController::Draw(std::istream&) const
 	return HandlingResult::Success;
 }
 
+HandlingResult ShapesController::DrawFromFile(std::istream& args)
+{
+	LoadFile(args);
+	Draw(args);
+	Clear(args);
+	return HandlingResult::Success;
+}
+
 HandlingResult ShapesController::Clear(std::istream&)
 {
 	m_shapes.clear();
-	m_output << "All shapes have been deleted" << std::endl;
 	return HandlingResult::Success;
 }
 
 void ShapesController::ShowHelp()
 {
 	m_output << "Add line: line <x1> <y1> <x2> <y2> <color>"
-			  << "\nAdd triangle: triangle <x1> <y1> <x2> <y2> <x3> <y3> <fill_color|No> <outline_color|No>"
-			  << "\nAdd rectangle: rectangle <x1> <y1> <x2> <y2> <fill_color|No> <outline_color|No>"
-			  << "\nAdd circle: circle <x> <y> <radius> <fill_color|No> <outline_color|No>"
-			  << "\nLoad shapes from file: loadfile <file_name>"
-			  << "\nShow shapes count: count"
-			  << "\nShow shapes: show"
-			  << "\nShow shape with biggest area: bigarea"
-			  << "\nShow shape with smaller perimeter: smallperim"
-			  << "\nDraw shapes: draw"
-			  << "\nClear shape list: clear"
-			  << "\nShow help: help"
-			  << "\nExit program: exit"
-			  << std::endl;
+			 << "\nAdd triangle: triangle <x1> <y1> <x2> <y2> <x3> <y3> <fill_color|No> <outline_color|No>"
+			 << "\nAdd rectangle: rectangle <x1> <y1> <x2> <y2> <fill_color|No> <outline_color|No>"
+			 << "\nAdd circle: circle <x> <y> <radius> <fill_color|No> <outline_color|No>"
+			 << "\nLoad shapes from file: loadfile <file_name>"
+			 << "\nShow shapes count: count"
+			 << "\nShow shapes: show"
+			 << "\nShow shape with biggest area: bigarea"
+			 << "\nShow shape with smaller perimeter: smallperim"
+			 << "\nDraw shapes: draw"
+			 << "\nDraw shapes from file: drawfile"
+			 << "\nClear shape list: clear"
+			 << "\nShow help: help"
+			 << "\nExit program: exit"
+			 << std::endl;
 }
 
 void ToLowerString(std::string& str)

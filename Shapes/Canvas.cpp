@@ -36,7 +36,7 @@ void Canvas::DrawPolygon(const std::vector<Point>& points,
 		convex.setPoint(i, sf::Vector2f(static_cast<float>(points[i].x), static_cast<float>(points[i].y)));
 	}
 
-	convex.setOutlineThickness(1);
+	convex.setOutlineThickness(2);
 	SetShapeColors(convex, fillColor, outlineColor);
 
 	m_window.draw(convex);
@@ -48,6 +48,7 @@ void Canvas::DrawCircle(const Point& center, double radius,
 	sf::CircleShape circle(static_cast<float>(radius));
 
 	circle.move(static_cast<float>(center.x), static_cast<float>(center.y));
+	circle.setOrigin(static_cast<float>(radius), static_cast<float>(radius));
 	circle.setOutlineThickness(1);
 	SetShapeColors(circle, fillColor, outlineColor);
 

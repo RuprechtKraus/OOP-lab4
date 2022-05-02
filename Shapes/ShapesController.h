@@ -40,6 +40,7 @@ private:
 		ShowBiggestAreaShape,
 		ShowSmallestPerimeterShape,
 		Draw,
+		DrawFile,
 		Clear,
 		ShowHelp,
 		Exit
@@ -59,6 +60,7 @@ private:
 	HandlingResult ShowBiggestArea(std::istream& args) const;
 	HandlingResult ShowSmallestPerimeter(std::istream& args) const;
 	HandlingResult Draw(std::istream& args) const;
+	HandlingResult DrawFromFile(std::istream& args);
 	HandlingResult Clear(std::istream& args);
 	Handler GetActionHandler(Action action);
 	void ReadShapesFile(std::ifstream& file);
@@ -79,6 +81,7 @@ private:
 		{ "bigarea", Action::ShowBiggestAreaShape },
 		{ "smallperim", Action::ShowSmallestPerimeterShape },
 		{ "draw",  Action::Draw },
+		{ "drawfile", Action::DrawFile },
 		{ "clear", Action::Clear },
 		{ "help", Action::ShowHelp },
 		{ "exit", Action::Exit }
