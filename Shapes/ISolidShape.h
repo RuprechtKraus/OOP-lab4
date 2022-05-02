@@ -2,7 +2,7 @@
 #include "IShape.h"
 #include "ShapeType.h"
 
-class ISolidShape : public IShape 
+class ISolidShape : public IShape //TODO: Убрать реализацию из интерфейсов в абстрактный класс
 {
 public:
 	ISolidShape(ShapeType type, std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor);

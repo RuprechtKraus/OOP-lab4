@@ -6,7 +6,7 @@
 class Canvas : public ICanvas
 {
 public:
-	Canvas(sf::RenderWindow& window);
+	Canvas(sf::RenderTarget& window);
 
 	void DrawLine(const Point& start, const Point& end, uint32_t color) override;
 	void DrawPolygon(const std::vector<Point>& points,
@@ -15,5 +15,5 @@ public:
 		std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor) override;
 
 private:
-	sf::RenderWindow& m_window;
+	sf::RenderTarget& m_window;
 };

@@ -1,6 +1,6 @@
 #include "Canvas.h"
 
-Canvas::Canvas(sf::RenderWindow& window)
+Canvas::Canvas(sf::RenderTarget& window)
 	: m_window(window)
 {
 }

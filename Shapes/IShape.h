@@ -4,7 +4,7 @@
 #include <string>
 #include "ICanvasDrawable.h"
 
-class IShape : public ICanvasDrawable
+class IShape : public ICanvasDrawable //TODO: Убрать реализацию из интерфейсов в абстрактный класс
 {
 public:
 	IShape(ShapeType type, std::optional<uint32_t> outlineColor);

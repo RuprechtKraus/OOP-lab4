@@ -8,8 +8,14 @@
 #include <sstream>
 
 static void ToLowerString(std::string& str);
+
 static std::optional<uint32_t> StringToColorCode(const std::string& str);
+
 static bool IsStringEmpty(const std::string& str);
+
+bool AreaCompare(const std::unique_ptr<IShape>& left, const std::unique_ptr<IShape>& right);
+
+bool PerimeterCompare(const std::unique_ptr<IShape>& left, const std::unique_ptr<IShape>& right);
 
 ShapesController::ShapesController(std::istream& input, std::ostream& output)
 	: m_input(input)
@@ -356,4 +362,14 @@ std::optional<uint32_t> StringToColorCode(const std::string& str)
 static bool IsStringEmpty(const std::string& str)
 {
 	return str.empty() || std::all_of(str.cbegin(), str.cend(), [](char c) { return c == ' '; });
+}
+
+bool AreaCompare(const std::unique_ptr<IShape>& left, const std::unique_ptr<IShape>& right)
+{
+	return left->GetArea() < right->GetArea();
+}
+
+bool PerimeterCompare(const std::unique_ptr<IShape>& left, const std::unique_ptr<IShape>& right)
+{
+	return left->GetPerimeter() < right->GetPerimeter();
 }
