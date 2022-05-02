@@ -5,7 +5,7 @@
 
 Circle::Circle(const Point& center, double radius,
 	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
-	: ISolidShape(ShapeType::Circle, fillColor, outlineColor)
+	: SolidShape(ShapeType::Circle, fillColor, outlineColor)
 	, m_center(center)
 {
 	if (radius < 0)
@@ -46,7 +46,7 @@ std::string Circle::ToString() const
 	std::ostringstream ss;
 
 	PrepareStream(ss);
-	ss << ISolidShape::ToString()
+	ss << SolidShape::ToString()
 	   << "\nCenter: " << m_center.x << ", " << m_center.y
 	   << "\nRadius: " << m_radius
 	   << std::endl;

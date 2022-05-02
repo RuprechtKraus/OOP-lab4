@@ -4,7 +4,7 @@
 #include <sstream>
 
 LineSegment::LineSegment(const Point& start, const Point& end, uint32_t color)
-	: IShape(ShapeType::LineSegment, std::nullopt)
+	: Shape(ShapeType::LineSegment, std::nullopt)
 	, m_start(start)
 	, m_end(end)
 	, m_color(color)
@@ -51,7 +51,7 @@ std::string LineSegment::ToString() const
 	std::ostringstream ss;
 
 	PrepareStream(ss);
-	ss << IShape::ToString()
+	ss << Shape::ToString()
 	   << "\nColor: " << m_color
 	   << "\nStart: " << m_start.x << ", " << m_start.y
 	   << "\nEnd: " << m_end.x << ", " << m_end.y

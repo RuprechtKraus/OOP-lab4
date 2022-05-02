@@ -1,13 +1,13 @@
 ﻿#include "pch.h"
-#include "Circle.h"
 #include "Canvas.h"
+#include "Circle.h"
 #include "CppUnitTest.h"
 #include "LineSegment.h"
 #include "Rectangle.h"
 #include "ShapesController.h"
 #include "Triangle.h"
-#include <sstream>
 #include "fakeit.hpp"
+#include <sstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace fakeit;

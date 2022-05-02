@@ -1,8 +1,8 @@
 #pragma once
-#include "ISolidShape.h"
+#include "SolidShape.h"
 #include "Point.h"
 
-class Triangle final : public ISolidShape
+class Triangle final : public SolidShape
 {
 public:
 	Triangle(const Point& v1, const Point& v2, const Point& v3, 

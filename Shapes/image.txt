@@ -1,7 +1,7 @@
 rectangle 0 0 1280 410 87ceeb no
 
 circle 100 100 50 fec015 ffa20e
-line 140 140 190 190  ffa20e
+line 140 140 190 190 ffa20e
 line 100 160 100 220 ffa20e
 line 160 100 220 100 ffa20e
 

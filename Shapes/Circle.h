@@ -1,8 +1,8 @@
 #pragma once
-#include "ISolidShape.h"
+#include "SolidShape.h"
 #include "Point.h"
 
-class Circle final : public ISolidShape
+class Circle final : public SolidShape
 {
 public:
 	Circle(const Point& center, double radius, 

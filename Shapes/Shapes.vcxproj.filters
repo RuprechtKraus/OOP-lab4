@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Исходные файлы\Interfaces">
-      <UniqueIdentifier>{38df6b1b-b0e2-4b3e-98df-588bc0ffcc10}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Файлы заголовков\Interfaces">
       <UniqueIdentifier>{2954f510-2486-4bee-a5bf-066bc57d8cab}</UniqueIdentifier>
     </Filter>
@@ -32,12 +29,6 @@
     </ClCompile>
     <ClCompile Include="Point.cpp">
       <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="IShape.cpp">
-      <Filter>Исходные файлы\Interfaces</Filter>
-    </ClCompile>
-    <ClCompile Include="ISolidShape.cpp">
-      <Filter>Исходные файлы\Interfaces</Filter>
     </ClCompile>
     <ClCompile Include="Circle.cpp">
       <Filter>Исходные файлы\Shapes</Filter>
@@ -59,6 +50,12 @@
     </ClCompile>
     <ClCompile Include="Canvas.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape.cpp">
+      <Filter>Исходные файлы\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="SolidShape.cpp">
+      <Filter>Исходные файлы\Shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,9 +80,6 @@
     <ClInclude Include="Triangle.h">
       <Filter>Файлы заголовков\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="ShapesController.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="ShapeParamsCompare.h">
       <Filter>Файлы заголовков\Shapes</Filter>
     </ClInclude>
@@ -101,5 +95,19 @@
     <ClInclude Include="Canvas.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="Shape.h">
+      <Filter>Файлы заголовков\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapesController.h">
+      <Filter>Файлы заголовков\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="SolidShape.h">
+      <Filter>Файлы заголовков\Shapes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="image.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -1,21 +1,20 @@
 #include "ShapesController.h"
 #include "Canvas.h"
-#include "ShapeParamsCompare.h"
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <fstream>
 #include <optional>
 #include <sstream>
 
-static void ToLowerString(std::string& str);
+void ToLowerString(std::string& str);
 
-static std::optional<uint32_t> StringToColorCode(const std::string& str);
+std::optional<uint32_t> StringToColorCode(const std::string& str);
 
-static bool IsStringEmpty(const std::string& str);
+bool IsStringEmpty(const std::string& str);
 
-bool AreaCompare(const std::unique_ptr<IShape>& left, const std::unique_ptr<IShape>& right);
+bool AreaCompare(const std::unique_ptr<Shape>& left, const std::unique_ptr<Shape>& right);
 
-bool PerimeterCompare(const std::unique_ptr<IShape>& left, const std::unique_ptr<IShape>& right);
+bool PerimeterCompare(const std::unique_ptr<Shape>& left, const std::unique_ptr<Shape>& right);
 
 ShapesController::ShapesController(std::istream& input, std::ostream& output)
 	: m_input(input)
@@ -364,12 +363,12 @@ static bool IsStringEmpty(const std::string& str)
 	return str.empty() || std::all_of(str.cbegin(), str.cend(), [](char c) { return c == ' '; });
 }
 
-bool AreaCompare(const std::unique_ptr<IShape>& left, const std::unique_ptr<IShape>& right)
+bool AreaCompare(const std::unique_ptr<Shape>& left, const std::unique_ptr<Shape>& right)
 {
 	return left->GetArea() < right->GetArea();
 }
 
-bool PerimeterCompare(const std::unique_ptr<IShape>& left, const std::unique_ptr<IShape>& right)
+bool PerimeterCompare(const std::unique_ptr<Shape>& left, const std::unique_ptr<Shape>& right)
 {
 	return left->GetPerimeter() < right->GetPerimeter();
 }

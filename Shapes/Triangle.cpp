@@ -5,7 +5,7 @@
 
 Triangle::Triangle(const Point& v1, const Point& v2, const Point& v3, 
 	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
-	: ISolidShape(ShapeType::Triangle, fillColor, outlineColor)
+	: SolidShape(ShapeType::Triangle, fillColor, outlineColor)
 	, m_vertex1(v1)
 	, m_vertex2(v2)
 	, m_vertex3(v3)
@@ -72,7 +72,7 @@ std::string Triangle::ToString() const
 	std::ostringstream ss;
 
 	PrepareStream(ss);
-	ss << ISolidShape::ToString()
+	ss << SolidShape::ToString()
 	   << "\nVertex 1: " << m_vertex1.x << ", " << m_vertex1.y
 	   << "\nVertex 2: " << m_vertex2.x << ", " << m_vertex2.y
 	   << "\nVertex 3: " << m_vertex3.x << ", " << m_vertex3.y

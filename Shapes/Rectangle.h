@@ -1,8 +1,8 @@
 #pragma once
-#include "ISolidShape.h"
+#include "SolidShape.h"
 #include "Point.h"
 
-class Rectangle final : public ISolidShape
+class Rectangle final : public SolidShape
 {
 public:
 	Rectangle(const Point& topLeft, const Point& bottomRight,

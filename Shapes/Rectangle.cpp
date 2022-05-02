@@ -3,7 +3,7 @@
 
 Rectangle::Rectangle(const Point& topLeft, const Point& bottomRight,
 	std::optional<uint32_t> fillColor, std::optional<uint32_t> outlineColor)
-	: ISolidShape(ShapeType::Rectangle, fillColor, outlineColor)
+	: SolidShape(ShapeType::Rectangle, fillColor, outlineColor)
 {
 	if (bottomRight.x < topLeft.x || bottomRight.y < topLeft.y)
 	{
@@ -67,7 +67,7 @@ std::string Rectangle::ToString() const
 	std::ostringstream ss;
 
 	PrepareStream(ss);
-	ss << ISolidShape::ToString()
+	ss << SolidShape::ToString()
 	   << "\nTop left: " << m_topLeft.x << ", " << m_topLeft.y
 	   << "\nBottom right: " << m_bottomRight.x << ", " << m_bottomRight.y
 	   << "\nWidth: " << m_width

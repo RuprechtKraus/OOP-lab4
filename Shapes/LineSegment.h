@@ -1,9 +1,9 @@
 #pragma once
 #include "ICanvas.h"
-#include "IShape.h"
+#include "Shape.h"
 #include "Point.h"
 
-class LineSegment final : public IShape
+class LineSegment final : public Shape
 {
 public:
 	LineSegment(const Point& start, const Point& end, uint32_t color = 0x000000U);

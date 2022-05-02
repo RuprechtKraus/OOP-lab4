@@ -1,7 +1,7 @@
 ﻿#include "ShapesController.h"
 #include <iostream>
 #include <limits>
-
+//TODO: Прочитать статью в чеклисте про вирт. деструкторы
 int main()
 {
 	ShapesController controller(std::cin, std::cout);
